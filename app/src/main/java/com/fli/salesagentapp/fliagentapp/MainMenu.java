@@ -1,7 +1,10 @@
 package com.fli.salesagentapp.fliagentapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.fli.salesagentapp.fliagentapp.adapters.MainMenuAdapter;
@@ -32,5 +35,17 @@ public class MainMenu extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        menu_grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position ==0 ){ startActivity(new Intent(getApplicationContext(),LoansActivity.class));}
+                else if(position ==1){ startActivity(new Intent(getApplicationContext(),PaymentsActivity.class));}
+                else if(position ==2){ startActivity(new Intent(getApplicationContext(),CollectionsActivity.class));}
+                else if(position ==3){ startActivity(new Intent(getApplicationContext(),AttendanceActivity.class));}
+            }
+        });
     }
+
+
+
 }
