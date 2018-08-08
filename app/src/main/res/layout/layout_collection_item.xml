@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_border"
+    android:padding="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="2dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:text="Center :"
+                android:paddingLeft="10dp"
+                android:textAlignment="viewEnd"
+                android:gravity="end"
+                android:textColor="@color/app_text_color"/>
+            <TextView
+                android:id="@+id/center_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text=""
+                android:textColor="@color/app_text_color"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="2dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:text="No. of Loans :"
+                android:paddingLeft="10dp"
+                android:textAlignment="viewEnd"
+                android:gravity="end"
+                android:textColor="@color/app_text_color"/>
+            <TextView
+                android:id="@+id/no_of_loans"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text=""
+                android:textColor="@color/app_text_color"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="2dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:text="Tot. Collection :"
+                android:paddingLeft="10dp"
+                android:textAlignment="viewEnd"
+                android:gravity="end"
+                android:textColor="@color/app_text_color"/>
+            <TextView
+                android:id="@+id/total_collection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text=""
+                android:textColor="@color/app_text_color"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="2dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:text="Pending Sync :"
+                android:paddingLeft="10dp"
+                android:textAlignment="viewEnd"
+                android:gravity="end"
+                android:textColor="@color/app_text_color"/>
+            <TextView
+                android:id="@+id/pending_sync"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text=""
+                android:textColor="@color/app_text_color"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
