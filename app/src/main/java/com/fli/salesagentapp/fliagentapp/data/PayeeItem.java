@@ -6,9 +6,10 @@ import java.util.ArrayList;
  * Created by janithah on 8/8/2018.
  */
 
-public class GroupItem {
-    public boolean isdefault =false;
+public class PayeeItem {
     public String id;
     public String name;
-    public ArrayList<PayeeItem> payees;
+    public String payment;
+    public String payment_due;
+    public ArrayList<AttendanceItem> attends;
 }

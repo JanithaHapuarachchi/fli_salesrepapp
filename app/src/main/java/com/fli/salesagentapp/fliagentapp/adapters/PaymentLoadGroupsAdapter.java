@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.fli.salesagentapp.fliagentapp.R;
 import com.fli.salesagentapp.fliagentapp.data.CenterItem;
+import com.fli.salesagentapp.fliagentapp.data.GroupItem;
 
 import java.util.ArrayList;
 
@@ -17,33 +18,33 @@ import java.util.ArrayList;
  * Created by janithah on 8/8/2018.
  */
 
-public class PaymentLoadCentersAdapter extends ArrayAdapter {
+public class PaymentLoadGroupsAdapter extends ArrayAdapter {
 
     private final Context context;
     LayoutInflater inf;
-    ArrayList<CenterItem> centerList;
+    ArrayList<GroupItem> groupList;
     int i;
-    CenterItem item;
+    GroupItem item;
 
-    public PaymentLoadCentersAdapter( Context context, ArrayList<CenterItem> centerList) {
-        super(context, R.layout.text_item2,centerList);
-        Log.e("COUNT ","Constructor");
+    public PaymentLoadGroupsAdapter( Context context, ArrayList<GroupItem> groupList) {
+        super(context, R.layout.text_item,groupList);
         inf = LayoutInflater.from(context);
+        inf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
-        this.centerList = centerList;
+        this.groupList =groupList;
     }
 
 
+    //@Override
     public View getView(int position, View view, ViewGroup viewGroup) {
-        Log.e("COUNT ",""+position);
         View v = view;
         TextView text;
         if (v == null) {
-            v = inf.inflate(R.layout.text_item2, viewGroup, false);
+            v = inf.inflate(R.layout.text_item, viewGroup, false);
             v.setTag(R.id.text1, v.findViewById(R.id.text1));
         }
-        item = centerList.get(position);
-        Log.e("FLI CENTER",centerList.get(position).toString());
+        item = groupList.get(position);
+        Log.e("FLI GROUP",groupList.get(position).toString());
         text = (TextView) v.getTag(R.id.text1);
         text.setText(item.name);
         return v;
