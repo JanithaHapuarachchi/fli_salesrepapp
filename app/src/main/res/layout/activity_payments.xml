@@ -51,7 +51,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="20"
-
+            android:focusable="false"
+            android:clickable="true"
             android:padding="5dp"
             android:textColor="@color/app_text_color"
             android:background="@drawable/round_border_min_edge"

@@ -26,7 +26,7 @@ public class PaymentLoadCentersAdapter extends ArrayAdapter {
     CenterItem item;
 
     public PaymentLoadCentersAdapter( Context context, ArrayList<CenterItem> centerList) {
-        super(context, R.layout.text_item2,centerList);
+        super(context, R.layout.text_item,centerList);
         Log.e("COUNT ","Constructor");
         inf = LayoutInflater.from(context);
         this.context = context;
@@ -39,7 +39,7 @@ public class PaymentLoadCentersAdapter extends ArrayAdapter {
         View v = view;
         TextView text;
         if (v == null) {
-            v = inf.inflate(R.layout.text_item2, viewGroup, false);
+            v = inf.inflate(R.layout.text_item, viewGroup, false);
             v.setTag(R.id.text1, v.findViewById(R.id.text1));
         }
         item = centerList.get(position);

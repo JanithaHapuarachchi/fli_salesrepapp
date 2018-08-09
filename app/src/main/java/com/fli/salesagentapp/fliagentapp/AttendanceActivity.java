@@ -39,6 +39,9 @@ public class AttendanceActivity extends AppCompatActivity {
     ArrayList<GroupItem> groups;
     ArrayList<PayeeItem> payees;
     GroupItem selected_group;
+
+    boolean init_centers =false;
+    boolean init_groups =false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,8 +66,13 @@ public class AttendanceActivity extends AppCompatActivity {
         spinner_center_names.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selected_center = initialCenters.get(position);
-                setGroupsforCenter(selected_center);
+                if(init_centers) {
+                    selected_center = initialCenters.get(position);
+                    setGroupsforCenter(selected_center);
+                }
+                else{
+                    init_centers =true;
+                }
             }
 
             @Override
@@ -76,7 +84,12 @@ public class AttendanceActivity extends AppCompatActivity {
         center_groups.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                populate_group_payments(position);
+                if(init_groups) {
+                    populate_group_payments(position);
+                }
+                else{
+                    init_groups =true;
+                }
 //                if(selected_center == null || isCenterAvailable(center_names.getText().toString())){
 //                    Utility.showMessage("Select a Correct Center",PaymentsActivity.this);
 //                }
@@ -142,6 +155,7 @@ public class AttendanceActivity extends AppCompatActivity {
                 payees = new ArrayList<PayeeItem>();
                 ArrayList<AttendanceItem> at = new ArrayList<AttendanceItem>();
                 for(int  k=0; k<2;k++){
+                    at = new ArrayList<AttendanceItem>();
                     payee = new PayeeItem();
                     payee.id ="X"+(k+1);
                     payee.name = "MR. A"+(k+1);

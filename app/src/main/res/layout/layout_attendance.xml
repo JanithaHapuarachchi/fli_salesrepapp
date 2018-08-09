@@ -27,20 +27,39 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp">
 
+        <Spinner
+
+
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:id="@+id/spinner_today_attendace"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:ems="20"
+            android:focusable="false"
+            android:clickable="true"
+            android:padding="5dp"
+            android:textColor="@color/app_text_color"
+            android:background="@drawable/rounded_border_green"
+            android:layout_weight="0.8"
+            />
+
         <EditText
+            android:visibility="gone"
+            android:layout_marginRight="5dp"
             android:clickable="true"
             android:focusable="false"
-            android:background="@drawable/round_border_min_edge"
+            android:background="@drawable/rounded_border_green"
             android:id="@+id/txt_today_attendace"
             android:padding="5dp"
             android:paddingLeft="10dp"
             android:textColor="@color/app_text_color"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_weight="0.8"
             />
 
         <LinearLayout
+            android:layout_marginLeft="5dp"
             android:orientation="horizontal"
             android:id="@+id/layout_attendance"
             android:textColor="@color/app_text_color"

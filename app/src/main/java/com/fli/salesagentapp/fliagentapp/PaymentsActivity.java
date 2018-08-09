@@ -42,6 +42,9 @@ public class PaymentsActivity extends AppCompatActivity { // implements TextWatc
     ArrayList<PayeeItem> payees;
     GroupItem selected_group;
 
+    boolean init_centers =false;
+    boolean init_groups =false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,11 +56,12 @@ public class PaymentsActivity extends AppCompatActivity { // implements TextWatc
         btn_select = (Button)findViewById(R.id.btn_select);
         pay_total = (TextView)findViewById(R.id.pay_total);
         center_payees = (ListView)findViewById(R.id.center_payees);
+        center_payees.setItemsCanFocus(true);
         initItems();
         Log.e("SIZE ",""+centers.size());
-        pl_center_adapter = new PaymentLoadCentersAdapter(getApplicationContext(),centers);
-        center_names.setAdapter(pl_center_adapter);
-        spinner_center_names.setAdapter(pl_center_adapter);
+       // pl_center_adapter = new PaymentLoadCentersAdapter(getApplicationContext(),centers);
+       // center_names.setAdapter(pl_center_adapter);
+        spinner_center_names.setAdapter(new PaymentLoadCentersAdapter(getApplicationContext(),centers));
         setGroupsforCenter(null);
         center_names.setThreshold(1);
         center_names.addTextChangedListener(new TextWatcher() {
@@ -80,8 +84,15 @@ public class PaymentsActivity extends AppCompatActivity { // implements TextWatc
         spinner_center_names.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selected_center = initialCenters.get(position);
-                setGroupsforCenter(selected_center);
+                Log.e("FLI","CENTERS");
+                if(init_centers) {
+                    selected_center = initialCenters.get(position);
+                    setGroupsforCenter(selected_center);
+                    //init_centers =false;
+                }
+                else{
+                    init_centers = true;
+                }
             }
 
             @Override
@@ -102,7 +113,14 @@ public class PaymentsActivity extends AppCompatActivity { // implements TextWatc
         center_groups.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                populate_group_payments(position);
+                Log.e("FLI","CENTER GROUPS");
+                if(init_groups) {
+                    populate_group_payments(position);
+                   // init_groups = false;
+                }
+                else{
+                    init_groups = true;
+                }
 //                if(selected_center == null || isCenterAvailable(center_names.getText().toString())){
 //                    Utility.showMessage("Select a Correct Center",PaymentsActivity.this);
 //                }
@@ -201,13 +219,13 @@ public class PaymentsActivity extends AppCompatActivity { // implements TextWatc
             defaultgroupItem.isdefault = true;
             defaultgrouList.add(defaultgroupItem);
             groups = new ArrayList<GroupItem>();
-            pl_group_adapter = new PaymentLoadGroupsAdapter(getApplicationContext(),defaultgrouList);
-            center_groups.setAdapter(pl_group_adapter);
+        //    pl_group_adapter = new PaymentLoadGroupsAdapter(getApplicationContext(),defaultgrouList);
+            center_groups.setAdapter(new PaymentLoadGroupsAdapter(getApplicationContext(),defaultgrouList));
         }
         else{
             groups = centerGroups.get(item.name);
-            pl_group_adapter = new PaymentLoadGroupsAdapter(getApplicationContext(),groups);
-            center_groups.setAdapter(pl_group_adapter);
+           // pl_group_adapter = new PaymentLoadGroupsAdapter(getApplicationContext(),groups);
+            center_groups.setAdapter(new PaymentLoadGroupsAdapter(getApplicationContext(),groups));
         }
     }
 
@@ -246,6 +264,10 @@ public class PaymentsActivity extends AppCompatActivity { // implements TextWatc
                 group.payees =payees;
 
             }
+            if(i==0 ){
+                selected_center = center;
+            }
+
             centerGroups.put(center.name,groupList);
             initialCenters.add(center);
         }

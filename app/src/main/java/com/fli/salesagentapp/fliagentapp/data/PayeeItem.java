@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 
 public class PayeeItem {
+    public int internal_id = 0 ;
     public String id;
     public String name;
     public String payment;
