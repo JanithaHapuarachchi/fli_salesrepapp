@@ -18,10 +18,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainMenu"  android:screenOrientation="portrait" />
-        <activity android:name=".LoansActivity"  android:screenOrientation="portrait" />
-        <activity android:name=".PaymentsActivity"  android:screenOrientation="portrait"/>
-        <activity android:name=".CollectionsActivity"  android:screenOrientation="portrait" />
-        <activity android:name=".AttendanceActivity"  android:screenOrientation="portrait"></activity>
+        <activity android:name=".LoansActivity"  android:screenOrientation="portrait" android:label="@string/title_loan" />
+        <activity android:name=".PaymentsActivity"  android:screenOrientation="portrait"  android:label="@string/title_payments"/>
+        <activity android:name=".CollectionsActivity"  android:screenOrientation="portrait"  android:label="@string/title_collections" />
+        <activity android:name=".AttendanceActivity"  android:screenOrientation="portrait"  android:label="@string/title_attendance"/>
     </application>
 
 </manifest>

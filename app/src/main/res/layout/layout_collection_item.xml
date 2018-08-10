@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/rounded_border"
+    android:background="@drawable/round_border_min_edge"
     android:padding="10dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -12,98 +13,108 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="2dp">
+            android:layout_margin="2dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:text="Center :"
-                android:paddingLeft="10dp"
-                android:textAlignment="viewEnd"
                 android:gravity="end"
-                android:textColor="@color/app_text_color"/>
+                android:paddingLeft="10dp"
+                android:text="Center :"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/app_text_color"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/center_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
                 android:text=""
-                android:textColor="@color/app_text_color"/>
+                android:textColor="@color/app_text_color" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="2dp">
+            android:layout_margin="2dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:text="No. of Loans :"
-                android:paddingLeft="10dp"
-                android:textAlignment="viewEnd"
                 android:gravity="end"
-                android:textColor="@color/app_text_color"/>
+                android:paddingLeft="10dp"
+                android:text="No. of Loans :"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/app_text_color"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/no_of_loans"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
                 android:text=""
-                android:textColor="@color/app_text_color"/>
+                android:textColor="@color/app_text_color" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="2dp">
+            android:layout_margin="2dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:text="Tot. Collection :"
-                android:paddingLeft="10dp"
-                android:textAlignment="viewEnd"
                 android:gravity="end"
-                android:textColor="@color/app_text_color"/>
+                android:paddingLeft="10dp"
+                android:text="Tot. Collection :"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/app_text_color"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/total_collection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
                 android:text=""
-                android:textColor="@color/app_text_color"/>
+                android:textColor="@color/app_text_color" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="2dp">
+            android:layout_margin="2dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:text="Pending Sync :"
-                android:paddingLeft="10dp"
-                android:textAlignment="viewEnd"
                 android:gravity="end"
-                android:textColor="@color/app_text_color"/>
+                android:paddingLeft="10dp"
+                android:text="Pending Sync :"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/app_text_color"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/pending_sync"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
                 android:text=""
-                android:textColor="@color/app_text_color"/>
+                android:textColor="@color/app_text_color" />
 
         </LinearLayout>
     </LinearLayout>

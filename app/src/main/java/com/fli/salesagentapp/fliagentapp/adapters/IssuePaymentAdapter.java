@@ -233,8 +233,13 @@ public class IssuePaymentAdapter extends BaseAdapter {
         @Override
         public void afterTextChanged(Editable s) {
             amount = (EditText) view.findViewById(R.id.txt_payment);
+            String text = amount.getText().toString();
+            if(text.equals("")){
+                text = "0";
+            }
+
             Log.e("FLI AMOUNT",amount.getText().toString());
-            items.get(position).payment = amount.getText().toString();
+            items.get(position).payment =text;
           //  pay_total.setText(total);
            // return;
         }

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
-    android:background="@drawable/round_border_min_edge">
+    android:background="@drawable/round_border_min_edge"
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,48 +13,46 @@
 
         <TextView
             android:id="@+id/txt_id"
-            android:textColor="@color/app_text_color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            />
+            android:textColor="@color/app_text_color"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txt_name"
-            android:textColor="@color/app_text_color_warning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            />
+            android:textColor="@color/app_text_color_warning" />
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp">
+        android:orientation="horizontal">
 
         <EditText
-            android:background="@drawable/round_border_min_edge"
             android:id="@+id/txt_payment"
-            android:padding="5dp"
-            android:paddingLeft="10dp"
-            android:textColor="@color/app_text_color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:background="@drawable/round_border_min_edge_textbox"
             android:inputType="number"
-            />
+            android:padding="5dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/app_text_color" />
 
         <TextView
             android:id="@+id/txt_payment_due"
-            android:textColor="@color/app_text_color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:layout_weight="0.5"
-            />
+            android:textColor="@color/app_text_color" />
     </LinearLayout>
 
 </LinearLayout>

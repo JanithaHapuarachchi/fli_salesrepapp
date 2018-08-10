@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_margin="5dp"
     android:padding="5dp"
-    android:background="@drawable/rounded_border"
+    android:background="@drawable/round_border_min_edge"
     >
 
     <com.fli.salesagentapp.fliagentapp.utils.SquareImageView
