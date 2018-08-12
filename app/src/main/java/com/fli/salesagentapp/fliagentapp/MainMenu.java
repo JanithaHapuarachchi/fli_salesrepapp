@@ -38,10 +38,19 @@ public class MainMenu extends AppCompatActivity {
         menu_grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position ==0 ){ startActivity(new Intent(getApplicationContext(),LoansActivity.class));}
-                else if(position ==1){ startActivity(new Intent(getApplicationContext(),PaymentsActivity.class));}
-                else if(position ==2){ startActivity(new Intent(getApplicationContext(),CollectionsActivity.class));}
-                else if(position ==3){ startActivity(new Intent(getApplicationContext(),AttendanceActivity.class));}
+                if(position ==0 ){
+                    startActivity(new Intent(getApplicationContext(),FragmentMainMenu.class).putExtra("FRAGMENT_NO", position));
+                }
+                else if(position ==1){
+                    startActivity(new Intent(getApplicationContext(),FragmentMainMenu.class).putExtra("FRAGMENT_NO", position));
+                }
+                else if(position ==2){
+                    startActivity(new Intent(getApplicationContext(),FragmentMainMenu.class).putExtra("FRAGMENT_NO", position));
+                }
+                else if(position ==3){
+                    startActivity(new Intent(getApplicationContext(),FragmentMainMenu.class).putExtra("FRAGMENT_NO", position));
+                }
+                finish();
             }
         });
     }

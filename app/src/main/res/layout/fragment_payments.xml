@@ -1,0 +1,132 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.fli.salesagentapp.fliagentapp.PaymentsFragment">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.fli.salesagentapp.fliagentapp.PaymentsActivity"
+        android:padding="5dp"
+        android:background="@color/app_background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/ic_arrow_drop_down"
+                    />
+
+                <Spinner
+
+                    android:id="@+id/spinner_center_names"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/round_border_min_edge_blue"
+                    android:ems="20"
+
+                    android:padding="2dp"
+                    android:textColor="@color/app_text_color"
+                    android:windowSoftInputMode="stateAlwaysHidden" />
+            </RelativeLayout>
+
+            <AutoCompleteTextView
+                android:id="@+id/center_names"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_border_min_edge"
+                android:ems="10"
+                android:hint="Center Name"
+                android:padding="10dp"
+                android:textAlignment="center"
+                android:textColor="@color/app_text_color"
+                android:textColorHint="@color/app_text_color"
+                android:visibility="gone">
+
+                <requestFocus />
+                <!--@android:drawable/editbox_background_normal-->
+            </AutoCompleteTextView>
+
+            <Spinner
+
+                android:id="@+id/center_groups"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/round_border_min_edge_red"
+                android:clickable="true"
+                android:ems="20"
+                android:focusable="false"
+                android:padding="2dp"
+                android:textColor="@color/app_text_color"
+                android:windowSoftInputMode="stateAlwaysHidden" />
+
+            <Button
+                android:id="@+id/btn_select"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:text="Select"
+                android:textColor="@color/colorAccent"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:text="Total:"
+                    android:textColor="@color/app_text_color"
+                    android:textSize="15dp"
+
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/pay_total"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:textColor="@color/app_text_color"/>
+
+                <Button
+                    android:id="@+id/btn_pay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="0.3"
+                    android:background="@drawable/rounded_green_button"
+                    android:text="Pay"
+                    android:textColor="@color/app_background"
+                    android:textSize="15dp" />
+
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/center_payees"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:dividerHeight="5dp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</FrameLayout>

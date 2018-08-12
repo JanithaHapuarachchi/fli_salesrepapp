@@ -1,0 +1,84 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.fli.salesagentapp.fliagentapp.AttendanceFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.fli.salesagentapp.fliagentapp.AttendanceActivity"
+        android:padding="5dp"
+        android:background="@color/app_background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/spinner_center_names"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/round_border_min_edge_blue"
+                android:ems="20"
+
+                android:padding="2dp"
+                android:textColor="@color/app_text_color"
+                android:windowSoftInputMode="stateAlwaysHidden" />
+
+            <AutoCompleteTextView
+                android:id="@+id/center_names"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_border_min_edge"
+                android:ems="10"
+                android:hint="Center Name"
+                android:padding="10dp"
+                android:textAlignment="center"
+                android:textColor="@color/app_text_color"
+                android:textColorHint="@color/app_text_color"
+                android:visibility="gone">
+
+                <requestFocus />
+                <!--@android:drawable/editbox_background_normal-->
+            </AutoCompleteTextView>
+
+            <Spinner
+
+                android:id="@+id/center_groups"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/round_border_min_edge_red"
+                android:ems="20"
+
+                android:padding="2dp"
+                android:textColor="@color/app_text_color"
+                android:windowSoftInputMode="stateAlwaysHidden" />
+
+            <Button
+                android:id="@+id/btn_mark_attendance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/rounded_green_button"
+                android:padding="10dp"
+                android:text="Mark Attendance"
+                android:textColor="@color/app_background" />
+
+            <ListView
+                android:id="@+id/center_attendances"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:dividerHeight="5dp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+
+</FrameLayout>

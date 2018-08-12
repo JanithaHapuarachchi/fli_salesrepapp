@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fli.salesagentapp.fliagentapp">
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity"
+        <activity
+            android:name=".LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,11 +18,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainMenu"  android:screenOrientation="portrait" />
-        <activity android:name=".LoansActivity"  android:screenOrientation="portrait" android:label="@string/title_loan" />
-        <activity android:name=".PaymentsActivity"  android:screenOrientation="portrait"  android:label="@string/title_payments"/>
-        <activity android:name=".CollectionsActivity"  android:screenOrientation="portrait"  android:label="@string/title_collections" />
-        <activity android:name=".AttendanceActivity"  android:screenOrientation="portrait"  android:label="@string/title_attendance"/>
+        <activity
+            android:name=".MainMenu"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LoansActivity"
+            android:label="@string/title_loan"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PaymentsActivity"
+            android:label="@string/title_payments"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CollectionsActivity"
+            android:label="@string/title_collections"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AttendanceActivity"
+            android:label="@string/title_attendance"
+            android:screenOrientation="portrait" />
+        <activity android:name=".FragmentMainMenu"  android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
