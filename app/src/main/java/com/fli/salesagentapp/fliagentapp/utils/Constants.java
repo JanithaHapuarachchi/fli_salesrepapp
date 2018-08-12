@@ -12,8 +12,8 @@ public class Constants {
     public static final String USER_PASSWORD = "USER_PASSWORD";
     public static final String FLI_SHARED_PREFS = "FLI_SHARED_PREFS";
     public static final String DATE_FORMAT ="dd-MM-yyyy";
-
-
+    public static final String AUTHENTICATION_KEY ="AUTHENTICATION_KEY";
+    public static final String USER_ID ="USER_ID";
 
     public static final String MAIN_URL = "https://52.74.229.37/fineract-provider/api/v1/";
     public static final String AUTHENTICATION_URL = "authentication";

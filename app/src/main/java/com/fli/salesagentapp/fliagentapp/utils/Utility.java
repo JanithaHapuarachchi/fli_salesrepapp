@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import com.fli.salesagentapp.fliagentapp.data.CurrentUser;
+
+import org.json.JSONObject;
+
 /**
  * Created by janithah on 8/8/2018.
  */
@@ -30,28 +34,42 @@ public class Utility {
         return preferences.getString(Constants.LAST_LOGGED_DATE, "");
     }
 
-    public static boolean setCurrentUser(Context context,String username,String password,String loggeddate){
+    public static boolean setCurrentUser(Context context, CurrentUser currentuser){
         SharedPreferences preferences =  getSharedPrefs(context);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(Constants.USER_NAME, username);
-        editor.putString(Constants.USER_PASSWORD, password);
-        editor.putString(Constants.LAST_LOGGED_DATE,loggeddate);
+        editor.putString(Constants.USER_NAME, currentuser.username);
+        editor.putString(Constants.USER_PASSWORD, currentuser.password);
+        editor.putString(Constants.LAST_LOGGED_DATE,currentuser.loggeddate);
+        editor.putString(Constants.AUTHENTICATION_KEY,currentuser.authkey);
+        editor.putString(Constants.USER_ID,currentuser.userid);
         editor.commit();
 
         return true;
     }
 
-    public static boolean isCurrentUser(Context context,String username,String password){
+    public static boolean isCurrentUser(Context context,CurrentUser currentUser){
         SharedPreferences preferences =  getSharedPrefs(context);
         String current_user_name =  preferences.getString(Constants.USER_NAME, "");
         String current_user_password = preferences.getString(Constants.USER_PASSWORD, "");
-        if(current_user_name.equals(username) && current_user_password.equals(password)){
+        if(current_user_name.equals(currentUser.username) && current_user_password.equals(currentUser.password)){
+            currentUser.authkey = getAuthKey(context);
+            currentUser.userid = getUserID(context);
             return true;
         }
         else{
             return false;
         }
 
+    }
+
+    public static String getUserID(Context context){
+        SharedPreferences preferences =  getSharedPrefs(context);
+        return preferences.getString(Constants.USER_ID, "");
+    }
+
+    public static String getAuthKey(Context context){
+        SharedPreferences preferences =  getSharedPrefs(context);
+        return preferences.getString(Constants.AUTHENTICATION_KEY, "");
     }
 
     public static String getCurrentUserName(Context context){
@@ -62,4 +80,12 @@ public class Utility {
         SharedPreferences preferences =  getSharedPrefs(context);
         return preferences.getString(Constants.USER_PASSWORD, "");
     }
+
+    public static boolean isJSONKeyAvailable(JSONObject jObject,String key){
+        if(jObject.has(key)){
+            return true;
+        }
+        return false;
+    }
+
 }

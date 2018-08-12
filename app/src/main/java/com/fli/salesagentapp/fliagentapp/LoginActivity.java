@@ -10,11 +10,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.fli.salesagentapp.fliagentapp.data.CurrentUser;
 import com.fli.salesagentapp.fliagentapp.data.ResObject;
 import com.fli.salesagentapp.fliagentapp.utils.Constants;
 import com.fli.salesagentapp.fliagentapp.utils.ProgressBarController;
+import com.fli.salesagentapp.fliagentapp.utils.RequestHandler;
 import com.fli.salesagentapp.fliagentapp.utils.Utility;
 import com.fli.salesagentapp.fliagentapp.utils.WSCalls;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -30,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     Context context;
     WSCalls wscalls;
     String str_last_logged_date;
+    static CurrentUser currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,14 +53,14 @@ public class LoginActivity extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
         str_today = df.format(c);
         prgController = new ProgressBarController(this);
-
+        new InitiateSSL().execute();
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String uname = txt_username.getText().toString();
                 String pswrd  =txt_password.getText().toString();
 
-                startActivity(new Intent(getApplicationContext(),MainMenu.class));
+               startActivity(new Intent(getApplicationContext(),MainMenu.class));
 //                if(uname.equals("") || pswrd.equals("")){
 //                    Utility.showMessage("Username or Password Cannot be Empty",getApplicationContext());
 //                }
@@ -67,11 +73,16 @@ public class LoginActivity extends AppCompatActivity {
 //                        try {
 //                            Date last_logged_date=new SimpleDateFormat(Constants.DATE_FORMAT).parse(str_last_logged_date);
 //                            Date today_date = new SimpleDateFormat(Constants.DATE_FORMAT).parse(str_today);
+//                            currentUser =CurrentUser.getCurrentUser();
 //                            if(today_date.after(last_logged_date)){ // login day for the first time
 //                                new CallAuthenticate().execute(uname,pswrd);
 //                            }
 //                            else{  //login today again
-//                                 if(Utility.isCurrentUser(getApplicationContext(),uname,pswrd)){
+//
+//                                currentUser.username = uname;
+//                                currentUser.password = pswrd;
+//                                currentUser.loggeddate = str_today;
+//                                 if(Utility.isCurrentUser(getApplicationContext(),currentUser)){
 //                                     startActivity(new Intent(getApplicationContext(),MainMenu.class));
 //                                 }
 //                                 else {
@@ -93,6 +104,30 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    class InitiateSSL extends AsyncTask <Void,Void,Void>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            prgController.showProgressBar("Initializing SSL...");
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            prgController.hideProgressBar();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                RequestHandler.inititateSSL();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
 
     class CallAuthenticate extends AsyncTask <String,Void,ResObject>{
 
@@ -105,6 +140,12 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ResObject response) {
             super.onPostExecute(response);
+            if(response.validity.equals(Constants.VALIDITY_SUCCESS)){
+                checkAutehnticate(response);
+            }
+            else{
+                Utility.showMessage(response.msg,getApplicationContext());
+            }
             Log.e("RES", response.toString());
             prgController.hideProgressBar();
         }
@@ -114,5 +155,31 @@ public class LoginActivity extends AppCompatActivity {
             return wscalls.autherise_user(params[0],params[1]);
 
         }
+    }
+
+
+    public void checkAutehnticate(ResObject resObject){
+        try {
+            JSONObject jsonResponse = new JSONObject(resObject.msg);
+            if(Utility.isJSONKeyAvailable(jsonResponse,"authenticated")){
+                if(jsonResponse.getBoolean("authenticated")){
+                    currentUser.authkey = jsonResponse.getString("base64EncodedAuthenticationKey");
+                    currentUser.userid = jsonResponse.getString("userId");
+                    Utility.setCurrentUser(getApplicationContext(),currentUser);
+                    startActivity(new Intent(getApplicationContext(),MainMenu.class));
+                }
+                else{
+                    Utility.showMessage("Login Failed",getApplicationContext());
+                }
+            }
+            else if(Utility.isJSONKeyAvailable(jsonResponse,"defaultUserMessage")){
+                Utility.showMessage(jsonResponse.getString("defaultUserMessage"),getApplicationContext());
+            }
+
+        } catch (JSONException e) {
+            Utility.showMessage(e.getMessage(),getApplicationContext());
+          //  e.printStackTrace();
+        }
+
     }
 }
