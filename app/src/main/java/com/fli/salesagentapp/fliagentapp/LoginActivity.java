@@ -41,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
+        currentUser =CurrentUser.getCurrentUser();
         txt_username = (EditText)findViewById(R.id.txt_username);
         txt_password = (EditText)findViewById(R.id.txt_password);
         btn_login = (Button)findViewById(R.id.btn_login);
@@ -53,48 +54,15 @@ public class LoginActivity extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
         str_today = df.format(c);
         prgController = new ProgressBarController(this);
-        new InitiateSSL().execute();
+       // new InitiateSSL().execute();
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String uname = txt_username.getText().toString();
                 String pswrd  =txt_password.getText().toString();
 
-               startActivity(new Intent(getApplicationContext(),MainMenu.class));
-//                if(uname.equals("") || pswrd.equals("")){
-//                    Utility.showMessage("Username or Password Cannot be Empty",getApplicationContext());
-//                }
-//                else{
-//                     str_last_logged_date = Utility.getLastLoggedDate(getApplicationContext());
-//                    if(str_last_logged_date.equals("")){ // first time for app
-//                        new CallAuthenticate().execute(uname,pswrd);
-//                    }
-//                    else{
-//                        try {
-//                            Date last_logged_date=new SimpleDateFormat(Constants.DATE_FORMAT).parse(str_last_logged_date);
-//                            Date today_date = new SimpleDateFormat(Constants.DATE_FORMAT).parse(str_today);
-//                            currentUser =CurrentUser.getCurrentUser();
-//                            if(today_date.after(last_logged_date)){ // login day for the first time
-//                                new CallAuthenticate().execute(uname,pswrd);
-//                            }
-//                            else{  //login today again
-//
-//                                currentUser.username = uname;
-//                                currentUser.password = pswrd;
-//                                currentUser.loggeddate = str_today;
-//                                 if(Utility.isCurrentUser(getApplicationContext(),currentUser)){
-//                                     startActivity(new Intent(getApplicationContext(),MainMenu.class));
-//                                 }
-//                                 else {
-//                                     Utility.showMessage("Username or Password is wrong",getApplicationContext());
-//                                 }
-//                            }
-//                        } catch (ParseException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//
-//                }
+         // startActivity(new Intent(getApplicationContext(),MainMenu.class));
+                checkLogin(uname,pswrd);
 
 
 
@@ -103,6 +71,47 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
+    public void checkLogin(String uname,String pswrd){
+        if(uname.equals("") || pswrd.equals("")){
+            Utility.showMessage("Username or Password Cannot be Empty",getApplicationContext());
+        }
+        else{
+            currentUser.username = uname;
+            currentUser.password = pswrd;
+            currentUser.loggeddate = str_today;
+            str_last_logged_date = Utility.getLastLoggedDate(getApplicationContext());
+            Log.e("FLI LAST DATE",str_last_logged_date);
+            Log.e("FLI TODAY",str_today);
+            if(str_last_logged_date.equals("")){ // first time for app
+                new CallAuthenticate().execute(uname,pswrd);
+            }
+            else{
+                try {
+                    Date last_logged_date=new SimpleDateFormat(Constants.DATE_FORMAT).parse(str_last_logged_date);
+                    Date today_date = new SimpleDateFormat(Constants.DATE_FORMAT).parse(str_today);
+
+                    if(today_date.after(last_logged_date)){ // login day for the first time
+                        new CallAuthenticate().execute(uname,pswrd);
+                    }
+                    else{  //login today again
+
+
+                        if(Utility.isCurrentUser(getApplicationContext(),currentUser)){
+                            startActivity(new Intent(getApplicationContext(),MainMenu.class));
+                        }
+                        else {
+                            Utility.showMessage("Username or Password is wrong",getApplicationContext());
+                        }
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
+
 
     class InitiateSSL extends AsyncTask <Void,Void,Void>{
         @Override
@@ -120,9 +129,10 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                RequestHandler.inititateSSL();
+                RequestHandler.inititateSSL(getApplicationContext());
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("FLI ERROR",e.getMessage());
+              //  e.printStackTrace();
             }
             return null;
         }

@@ -3,6 +3,9 @@ package com.fli.salesagentapp.fliagentapp.utils;
 import android.content.Context;
 import android.util.Log;
 
+import com.fli.salesagentapp.fliagentapp.R;
+
+
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -13,17 +16,31 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.Base64;
 
+import javax.net.SocketFactory;
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSessionContext;
+import javax.net.ssl.SSLSocket;
+
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * Created by janithamh on 8/12/18.
@@ -32,19 +49,22 @@ import javax.net.ssl.TrustManagerFactory;
 public class RequestHandler {
 
 
-    public static String sendGet(String methodname, String params, Context context) throws IOException{
+    public static String sendGet(String methodname, String params, Context context) throws Exception{
+        SSLContext sc;
+        sc = SSLContext.getInstance("TLS");
+        sc.init(null, new X509TrustManager[]{new NullX509TrustManager()}, new SecureRandom());
         String responseString ="";
         String completeurl = Constants.MAIN_URL+methodname;
         Log.e("URL GET",completeurl);
-        String encoding = null;
-
         URL obj = new URL(completeurl);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+        con.setSSLSocketFactory(sc.getSocketFactory());
+        con.setHostnameVerifier(new NullHostNameVerifier());
         con.setRequestMethod("GET");
         con.setRequestProperty("Fineract-Platform-TenantId","default");
-        encoding = android.util.Base64.encodeToString((Utility.getCurrentUserName(context)+":"+Utility.getCurrentPassword(context)).getBytes(), android.util.Base64.NO_WRAP);
-        Log.e("ENCODE", encoding);
-        con.setRequestProperty  ("Authorization", "Basic " + encoding);
+        if(!Utility.getAuthKey(context).equals("")){
+            con.setRequestProperty ("Authorization", "Basic " + Utility.getAuthKey(context));
+        }
         int responseCode = con.getResponseCode();
         Log.e("Code",Integer.toString(responseCode));
         /*if (responseCode == HttpURLConnection.HTTP_OK) {*/
@@ -69,22 +89,52 @@ public class RequestHandler {
          */   return responseString;
     }
 
-    public static String sendPost(JSONObject postobject, String methodname,Context context) throws IOException{
+    public static String sendPost(JSONObject postobject, String methodname,Context context) throws Exception{
+        SSLContext sc;
+        sc = SSLContext.getInstance("TLS");
+    //    HostnameVerifier hostnameVerifier = ;
+//        HostnameVerifier hostnameVerifier = new HostnameVerifier() {
+//
+//            @Override
+//            public boolean verify(String hostname, SSLSession session) {
+//                HostnameVerifier hv =
+//                        HttpsURLConnection.getDefaultHostnameVerifier();
+//                return hv.verify("https://52.74.229.37:443", session);
+//            }
+//
+//        };
+//        SocketFactory sf = SSLSocketFactory.getDefault();
+//        SSLSocket socket = (SSLSocket) sf.createSocket("https://52.74.229.37:443", 443);
+//        HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
+//        SSLSession s = socket.getSession();
+//
+//
+//        if (!hv.verify("https://52.74.229.37:443", s)) {
+//            throw new SSLHandshakeException("Expected mail.google.com, "+
+//                    "found " + s.getPeerPrincipal());
+//        }
+
         String responseString ="";
         String completeurl = Constants.MAIN_URL+methodname;
         Log.e("URL POST",completeurl);
         URL obj = new URL(completeurl);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+
+
+       // sc.init(null, null, new java.security.SecureRandom());
+        sc.init(null, new X509TrustManager[]{new NullX509TrustManager()}, new SecureRandom());
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+        con.setSSLSocketFactory(sc.getSocketFactory());
+        con.setHostnameVerifier(new NullHostNameVerifier());
+        //con.setHostnameVerifier(hostnameVerifier);
         con.setRequestMethod("POST");
-        con.setDoInput (true);
-        con.setDoOutput (true);
-        con.setUseCaches (false);
+//        con.setDoInput (true);
+//        con.setDoOutput (true);
+//        con.setUseCaches (false);
         con.setRequestProperty("Content-Type","application/json");
         con.setRequestProperty("Fineract-Platform-TenantId","default");
-        if(!methodname.equals(Constants.AUTHENTICATION_URL)){
-        String encoding = android.util.Base64.encodeToString((Utility.getCurrentUserName(context)+":"+Utility.getCurrentPassword(context)).getBytes(), android.util.Base64.NO_WRAP);
-        Log.e("ENCODE", encoding);
-        con.setRequestProperty  ("Authorization", "Basic " + encoding);
+        if(!Utility.getAuthKey(context).equals("")){
+        con.setRequestProperty  ("Authorization", "Basic " + Utility.getAuthKey(context));
         }
         con.connect();
 
@@ -103,49 +153,44 @@ public class RequestHandler {
         }
 
         responseString = response.toString();
-        Log.e("String",responseString);
+        Log.e("FLI String",responseString);
         in.close();
 
-
+       // socket.close();
 
         return responseString;
     }
 
 
-    public static void inititateSSL() throws Exception {
-        // Load CAs from an InputStream
-// (could be from a resource or ByteArrayInputStream or ...)
-        CertificateFactory cf = CertificateFactory.getInstance("X.509");
-// From https://www.washington.edu/itconnect/security/ca/load-der.crt
-        InputStream caInput = new BufferedInputStream(new FileInputStream("load-der.crt"));
-        Certificate ca;
-        try {
-            ca = cf.generateCertificate(caInput);
-            System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
-        } finally {
-            caInput.close();
-        }
+    public static void inititateSSL(Context cont) throws Exception {
 
 // Create a KeyStore containing our trusted CAs
-        String keyStoreType = KeyStore.getDefaultType();
-        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-        keyStore.load(null, null);
-        keyStore.setCertificateEntry("ca", ca);
+//        String keyStoreType = KeyStore.getDefaultType();
+//        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+//        keyStore.load(null, null);
+     //   keyStore.setCertificateEntry("ca", ca);
 
 // Create a TrustManager that trusts the CAs in our KeyStore
-        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
-        tmf.init(keyStore);
+//        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+//        TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+//        tmf.init(keyStore);
+
 
 // Create an SSLContext that uses our TrustManager
         SSLContext context = SSLContext.getInstance("TLS");
-        context.init(null, tmf.getTrustManagers(), null);
+      //context.init(null, tmf.getTrustManagers(), null);
+     //   context.init(null,new TrustManager[]{tm},null);
+        context.init(null, new X509TrustManager[]{new NullX509TrustManager()}, new SecureRandom());
 
 // Tell the URLConnection to use a SocketFactory from our SSLContext
-        URL url = new URL(Constants.MAIN_URL);
+        URL url = new URL(Constants.MAIN_URL+"clients");
         HttpsURLConnection urlConnection =
                 (HttpsURLConnection)url.openConnection();
         urlConnection.setSSLSocketFactory(context.getSocketFactory());
+        urlConnection.setHostnameVerifier(new NullHostNameVerifier());
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setRequestProperty("Fineract-Platform-TenantId","default");
+        urlConnection.setRequestProperty  ("Authorization", "Basic " + "amFuaXRoYTphYmNAMTIzNA==");
        // InputStream in = urlConnection.getInputStream();
         BufferedReader in = new BufferedReader(new InputStreamReader(
                 urlConnection.getInputStream()));
@@ -162,4 +207,30 @@ public class RequestHandler {
     }
 
 
+
+    static class NullHostNameVerifier implements HostnameVerifier {
+
+        @Override
+        public boolean verify(String hostname, SSLSession session) {
+            Log.i("RestUtilImpl", "Approving certificate for " + hostname);
+            return true;
+        }
+
+    }
+    static class NullX509TrustManager implements X509TrustManager {
+        @Override
+        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType)
+                throws CertificateException {
+        }
+
+        @Override
+        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType)
+                throws CertificateException {
+        }
+
+        @Override
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
+    }
 }

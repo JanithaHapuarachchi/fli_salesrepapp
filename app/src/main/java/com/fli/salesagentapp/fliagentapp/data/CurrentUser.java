@@ -20,5 +20,9 @@ public class CurrentUser {
         return currentUser;
     }
 
+    @Override
+    public String toString() {
+        return "Name: "+username+" id: "+userid+" password: "+password+" loggeddate: "+loggeddate+" authkey: "+authkey;
+    }
 }
 

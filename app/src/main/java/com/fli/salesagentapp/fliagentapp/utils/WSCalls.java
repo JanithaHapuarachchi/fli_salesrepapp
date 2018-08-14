@@ -1,6 +1,7 @@
 package com.fli.salesagentapp.fliagentapp.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.fli.salesagentapp.fliagentapp.data.ResObject;
 
@@ -28,9 +29,11 @@ public class WSCalls {
             res_object.validity = Constants.VALIDITY_SUCCESS;
             res_object.msg = response;
 
-        } catch (IOException e) {
+        } catch (Exception e) {
+            Log.e("FLI E AUTH",e.getMessage());
             res_object.validity = Constants.VALIDITY_FAILED;
-            res_object.msg = e.getMessage();
+            res_object.msg = "Login Failed";
+          // res_object.msg = e.getMessage();
         }
         return res_object;
     }

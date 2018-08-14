@@ -3,6 +3,7 @@ package com.fli.salesagentapp.fliagentapp.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.fli.salesagentapp.fliagentapp.data.CurrentUser;
@@ -35,6 +36,7 @@ public class Utility {
     }
 
     public static boolean setCurrentUser(Context context, CurrentUser currentuser){
+        Log.e("FLI CURRENT USER",currentuser.toString());
         SharedPreferences preferences =  getSharedPrefs(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(Constants.USER_NAME, currentuser.username);

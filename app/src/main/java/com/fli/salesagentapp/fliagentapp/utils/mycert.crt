@@ -1,0 +1,57 @@
+CONNECTED(00000184)
+---
+Certificate chain
+ 0 s:/C=ED/ST=mifos/L=mifos/O=mifos/OU=mifos/CN=mifos
+   i:/C=ED/ST=mifos/L=mifos/O=mifos/OU=mifos/CN=mifos
+---
+Server certificate
+-----BEGIN CERTIFICATE-----
+MIIDWTCCAkGgAwIBAgIETATTSjANBgkqhkiG9w0BAQsFADBdMQswCQYDVQQGEwJF
+RDEOMAwGA1UECBMFbWlmb3MxDjAMBgNVBAcTBW1pZm9zMQ4wDAYDVQQKEwVtaWZv
+czEOMAwGA1UECxMFbWlmb3MxDjAMBgNVBAMTBW1pZm9zMB4XDTE3MDUxODExNDUw
+NloXDTE3MDgxNjExNDUwNlowXTELMAkGA1UEBhMCRUQxDjAMBgNVBAgTBW1pZm9z
+MQ4wDAYDVQQHEwVtaWZvczEOMAwGA1UEChMFbWlmb3MxDjAMBgNVBAsTBW1pZm9z
+MQ4wDAYDVQQDEwVtaWZvczCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+ALp6qP4V7lcF9tmQsH3i6RoZiE6tkn8xdWXB7Kbtvey8a+Jb8YisYQkGlIgDck+E
+tKRr06cryvO1q6GJf52b7Ny3GtS4m+XEgtO395uyS4WJRbZKUKtdHlf1AK2WHYBj
+lHHe2qBS45Drv/XB0ct/HrJ6pM+rdijgIum6WrOknr3NMZMopqUwWFvKkPwQjRSu
+M/P3Z3MufEJlOmnzvy07VPzruS2dDNxOOsRHLWq4LZ6BUvhxT1/NcH/nKRIE8Zhn
+GD5CsWL17jerRBW3CFBYeEkbOFuUAQrpY/rRX6+UTDJJ4cyE24UIRXQeueytNSOT
+sdtKWZeaKBtk6KNV9Ju8pK8CAwEAAaMhMB8wHQYDVR0OBBYEFEJYQnLeyLEkw4J0
+fwUn67fpUqnJMA0GCSqGSIb3DQEBCwUAA4IBAQA8rS0JqIVCPKfPvvz7zgW533nN
+GNWh+WrR5AruBy2KKwdB+44B+y0ZzuVmQDjk/EvUXmCBgql7LTCF9YC8QB4aqmhn
+3eg2QekoI3QHl0d/BptOFXkMSlpxYDMwSUwIC4nk2gIXzAlTdEGKilNZrjlcUcOZ
+5zEJ9ddDb+1eX6u60cB/IvZg6vIQ5XmMteBRoxmP0kLMJkrj9pfJdOX0hQds8/11
+DzQT2Epx5FRDhlshDOthDRK25Zm40Lx3e6yiGcTLPv7Kc3pAdNSHgzwsmzD1c8rF
++kp16axjkcVUD2RgWKX+H3FnAjNRkyzF0yoojYMGstGmlJd9+HMMP/Ftoe7w
+-----END CERTIFICATE-----
+subject=/C=ED/ST=mifos/L=mifos/O=mifos/OU=mifos/CN=mifos
+issuer=/C=ED/ST=mifos/L=mifos/O=mifos/OU=mifos/CN=mifos
+---
+No client certificate CA names sent
+Peer signing digest: SHA512
+Server Temp Key: ECDH, P-256, 256 bits
+---
+SSL handshake has read 1345 bytes and written 434 bytes
+---
+New, TLSv1/SSLv3, Cipher is ECDHE-RSA-AES128-GCM-SHA256
+Server public key is 2048 bit
+Secure Renegotiation IS supported
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+SSL-Session:
+    Protocol  : TLSv1.2
+    Cipher    : ECDHE-RSA-AES128-GCM-SHA256
+    Session-ID: 5B7150F2454A1E92D82B9D267D63B499DB78428D368B584807027CC91082A105
+    Session-ID-ctx:
+    Master-Key: D9E5F0F36A6BAA450A2986942042F4A0956E60397C46B4654D9EC3DC5098000D65F38267FDAED50D0B5C7C7DF981B616
+    Key-Arg   : None
+    PSK identity: None
+    PSK identity hint: None
+    SRP username: None
+    Start Time: 1534152967
+    Timeout   : 300 (sec)
+    Verify return code: 10 (certificate has expired)
+---
+

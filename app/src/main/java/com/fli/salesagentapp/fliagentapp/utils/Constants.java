@@ -15,7 +15,7 @@ public class Constants {
     public static final String AUTHENTICATION_KEY ="AUTHENTICATION_KEY";
     public static final String USER_ID ="USER_ID";
 
-    public static final String MAIN_URL = "https://52.74.229.37/fineract-provider/api/v1/";
+    public static final String MAIN_URL = "https://52.74.229.37:443/fineract-provider/api/v1/";
     public static final String AUTHENTICATION_URL = "authentication";
 
 
