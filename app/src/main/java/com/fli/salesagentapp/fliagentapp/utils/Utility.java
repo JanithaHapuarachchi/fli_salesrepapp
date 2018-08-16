@@ -8,7 +8,11 @@ import android.widget.Toast;
 
 import com.fli.salesagentapp.fliagentapp.data.CurrentUser;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by janithah on 8/8/2018.
@@ -47,6 +51,14 @@ public class Utility {
         editor.commit();
 
         return true;
+    }
+
+    public static ArrayList<JSONObject> getArrayListformJSONARRAY(JSONArray array) throws JSONException {
+        ArrayList<JSONObject> list = new ArrayList<JSONObject>();
+        for(int i=0;i<array.length();i++){
+            list.add(array.getJSONObject(i));
+        }
+        return  list;
     }
 
     public static boolean isCurrentUser(Context context,CurrentUser currentUser){

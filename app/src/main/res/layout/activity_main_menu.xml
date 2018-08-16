@@ -18,4 +18,6 @@
         android:verticalSpacing="5dp"
         android:horizontalSpacing="5dp"
         android:stretchMode="columnWidth"></GridView>
+    <include layout="@layout/layout_progress_bar" />
+
 </RelativeLayout>

@@ -98,7 +98,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
                         if(Utility.isCurrentUser(getApplicationContext(),currentUser)){
-                            startActivity(new Intent(getApplicationContext(),MainMenu.class));
+                            Intent in = new Intent(getApplicationContext(),MainMenu.class);
+                            in.putExtra(Constants.SHOULD_SYNC_AGAIN,false);
+                            startActivity(in);
                         }
                         else {
                             Utility.showMessage("Username or Password is wrong",getApplicationContext());
@@ -176,7 +178,9 @@ public class LoginActivity extends AppCompatActivity {
                     currentUser.authkey = jsonResponse.getString("base64EncodedAuthenticationKey");
                     currentUser.userid = jsonResponse.getString("userId");
                     Utility.setCurrentUser(getApplicationContext(),currentUser);
-                    startActivity(new Intent(getApplicationContext(),MainMenu.class));
+                    Intent in =  new Intent(getApplicationContext(),MainMenu.class);
+                    in.putExtra(Constants.SHOULD_SYNC_AGAIN,true);
+                    startActivity(in);
                 }
                 else{
                     Utility.showMessage("Login Failed",getApplicationContext());

@@ -49,7 +49,7 @@ import javax.net.ssl.X509TrustManager;
 public class RequestHandler {
 
 
-    public static String sendGet(String methodname, String params, Context context) throws Exception{
+    public static String sendGet(String methodname, Context context) throws Exception{
         SSLContext sc;
         sc = SSLContext.getInstance("TLS");
         sc.init(null, new X509TrustManager[]{new NullX509TrustManager()}, new SecureRandom());
@@ -71,7 +71,7 @@ public class RequestHandler {
 
         BufferedReader in = new BufferedReader(new InputStreamReader(
                 con.getInputStream()));
-        String inputLine;
+        String inputLine= "";
         StringBuffer response = new StringBuffer();
 
         while ((inputLine = in.readLine()) != null) {
