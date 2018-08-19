@@ -9,8 +9,11 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.fli.salesagentapp.fliagentapp.adapters.MainMenuAdapter;
+import com.fli.salesagentapp.fliagentapp.db.DBOperations;
+import com.fli.salesagentapp.fliagentapp.services.SubmitDataService;
 import com.fli.salesagentapp.fliagentapp.utils.Constants;
 import com.fli.salesagentapp.fliagentapp.utils.ProgressBarController;
+import com.fli.salesagentapp.fliagentapp.utils.Utility;
 import com.fli.salesagentapp.fliagentapp.utils.WSCalls;
 
 import org.json.JSONException;
@@ -23,6 +26,9 @@ public class MainMenu extends AppCompatActivity {
     GridView menu_grid;
     ArrayList<JSONObject> menu_items;
     ProgressBarController prgController;
+    DBOperations dbOperations;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +37,7 @@ public class MainMenu extends AppCompatActivity {
         menu_grid = (GridView)findViewById(R.id.menu_grid);
         menu_items = new ArrayList<JSONObject>();
         wscalls = new WSCalls(getApplicationContext());
+        dbOperations = new DBOperations(getApplicationContext());
         prgController = new ProgressBarController(this);
         try {
             menu_items.add(new JSONObject().put("img","loans").put("txt","Loans"));
@@ -45,6 +52,9 @@ public class MainMenu extends AppCompatActivity {
       //  sync_again();
         if(getIntent().getExtras().getBoolean(Constants.SHOULD_SYNC_AGAIN)){
             sync_again();
+        }
+        else{
+            startService();
         }
 
         menu_grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -65,9 +75,22 @@ public class MainMenu extends AppCompatActivity {
                 finish();
             }
         });
+
+    }
+
+    private void startService() {
+        if(!SubmitDataService.isServiceRunning){
+            if (Utility.isConnected(MainMenu.this)) {
+                Intent ser = new Intent(MainMenu.this, SubmitDataService.class);
+                startService(ser);
+            }
+        }
+
+
     }
 
     private void sync_again(){
+
         new SyncLoans().execute();
     }
 
@@ -83,13 +106,14 @@ public class MainMenu extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             prgController.hideProgressBar();
+            startService();
 
 
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-
+            dbOperations.truncateDB();
             wscalls.sync_loans();
             return null;
         }

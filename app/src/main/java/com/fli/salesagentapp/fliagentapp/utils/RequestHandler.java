@@ -92,45 +92,18 @@ public class RequestHandler {
     public static String sendPost(JSONObject postobject, String methodname,Context context) throws Exception{
         SSLContext sc;
         sc = SSLContext.getInstance("TLS");
-    //    HostnameVerifier hostnameVerifier = ;
-//        HostnameVerifier hostnameVerifier = new HostnameVerifier() {
-//
-//            @Override
-//            public boolean verify(String hostname, SSLSession session) {
-//                HostnameVerifier hv =
-//                        HttpsURLConnection.getDefaultHostnameVerifier();
-//                return hv.verify("https://52.74.229.37:443", session);
-//            }
-//
-//        };
-//        SocketFactory sf = SSLSocketFactory.getDefault();
-//        SSLSocket socket = (SSLSocket) sf.createSocket("https://52.74.229.37:443", 443);
-//        HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
-//        SSLSession s = socket.getSession();
-//
-//
-//        if (!hv.verify("https://52.74.229.37:443", s)) {
-//            throw new SSLHandshakeException("Expected mail.google.com, "+
-//                    "found " + s.getPeerPrincipal());
-//        }
-
         String responseString ="";
         String completeurl = Constants.MAIN_URL+methodname;
         Log.e("URL POST",completeurl);
         URL obj = new URL(completeurl);
 
-
-
-       // sc.init(null, null, new java.security.SecureRandom());
         sc.init(null, new X509TrustManager[]{new NullX509TrustManager()}, new SecureRandom());
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setSSLSocketFactory(sc.getSocketFactory());
         con.setHostnameVerifier(new NullHostNameVerifier());
-        //con.setHostnameVerifier(hostnameVerifier);
+
         con.setRequestMethod("POST");
-//        con.setDoInput (true);
-//        con.setDoOutput (true);
-//        con.setUseCaches (false);
+
         con.setRequestProperty("Content-Type","application/json");
         con.setRequestProperty("Fineract-Platform-TenantId","default");
         if(!Utility.getAuthKey(context).equals("")){
@@ -156,10 +129,52 @@ public class RequestHandler {
         Log.e("FLI String",responseString);
         in.close();
 
-       // socket.close();
+        return responseString;
+    }
+
+    public static String sendServicePost(JSONObject postobject, String methodname,Context context) throws Exception{
+        SSLContext sc;
+        sc = SSLContext.getInstance("TLS");
+        String responseString ="";
+        String completeurl = Constants.MAIN_URL+methodname;
+        Log.e("URL POST",completeurl);
+        URL obj = new URL(completeurl);
+
+        sc.init(null, new X509TrustManager[]{new NullX509TrustManager()}, new SecureRandom());
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+        con.setSSLSocketFactory(sc.getSocketFactory());
+        con.setHostnameVerifier(new NullHostNameVerifier());
+
+        con.setRequestMethod("POST");
+
+        con.setRequestProperty("Content-Type","application/json");
+        con.setRequestProperty("Fineract-Platform-TenantId","default");
+        if(!Utility.getAuthKey(context).equals("")){
+            con.setRequestProperty  ("Authorization", "Basic " + Utility.getAuthKey(context));
+        }
+        con.connect();
+
+        DataOutputStream printout = new DataOutputStream(con.getOutputStream ());
+        printout.writeBytes(postobject.toString());
+        printout.flush ();
+        printout.close ();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(
+                con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+
+        responseString = response.toString();
+        Log.e("FLI Service String",responseString);
+        in.close();
 
         return responseString;
     }
+
 
 
     public static void inititateSSL(Context cont) throws Exception {

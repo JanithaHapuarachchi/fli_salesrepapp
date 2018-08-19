@@ -1,7 +1,9 @@
 package com.fli.salesagentapp.fliagentapp;
 
 import android.content.Context;
+import android.icu.util.Calendar;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,15 +18,26 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.fli.salesagentapp.fliagentapp.adapters.AttendanceAdapter;
+import com.fli.salesagentapp.fliagentapp.adapters.IssuePaymentAdapter;
 import com.fli.salesagentapp.fliagentapp.adapters.PaymentLoadCentersAdapter;
 import com.fli.salesagentapp.fliagentapp.adapters.PaymentLoadGroupsAdapter;
 import com.fli.salesagentapp.fliagentapp.data.AttendanceItem;
 import com.fli.salesagentapp.fliagentapp.data.CenterItem;
+import com.fli.salesagentapp.fliagentapp.data.ClientAttendanceInfo;
+import com.fli.salesagentapp.fliagentapp.data.ClientItem;
+import com.fli.salesagentapp.fliagentapp.data.ClientPaymentsInfo;
 import com.fli.salesagentapp.fliagentapp.data.GroupItem;
+import com.fli.salesagentapp.fliagentapp.data.MarkedAttendace;
 import com.fli.salesagentapp.fliagentapp.data.PayeeItem;
+import com.fli.salesagentapp.fliagentapp.services.SubmitDataService;
+import com.fli.salesagentapp.fliagentapp.utils.Constants;
+import com.fli.salesagentapp.fliagentapp.utils.DataManager;
 import com.fli.salesagentapp.fliagentapp.utils.ProgressBarController;
+import com.fli.salesagentapp.fliagentapp.utils.Utility;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -41,21 +54,25 @@ public class AttendanceFragment extends Fragment {
     final String TAG_ATTENDANCE = "Attendance";
     ArrayList<CenterItem> initialCenters,centers;
     HashMap<String,ArrayList<GroupItem>> centerGroups;
-    HashMap<String,ArrayList<PayeeItem>> groupPayees;
+    HashMap<String,ArrayList<ClientItem>> groupClients;
     AutoCompleteTextView center_names;
     Spinner center_groups,spinner_center_names;
-    Button btn_select,btn_mark_attendance;
+    Button btn_mark_attendance;
     TextView pay_total;
     ListView center_attendances;
     PaymentLoadCentersAdapter pl_center_adapter;
     PaymentLoadGroupsAdapter pl_group_adapter;
     CenterItem selected_center;
-    ArrayList<GroupItem> groups;
-    ArrayList<PayeeItem> payees;
+    ArrayList<GroupItem> groups,allgroups;
+   // ArrayList<PayeeItem> payees;
     GroupItem selected_group;
+    ArrayList<ClientItem> marked_clients;
 
     ProgressBarController prgController;
-
+    ClientAttendanceInfo info;
+    DataManager dmManager;
+    AttendanceAdapter attendanceAdapter;
+    String str_today;
     boolean init_centers =false;
     boolean init_groups =false;
 
@@ -106,21 +123,43 @@ public class AttendanceFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_attendance, container, false);
 
         prgController = new ProgressBarController(getActivity());
+        dmManager = new DataManager(getContext());
         center_names = (AutoCompleteTextView)view.findViewById(R.id.center_names);
         center_groups = (Spinner)view.findViewById(R.id.center_groups);
         spinner_center_names = (Spinner)view.findViewById(R.id.spinner_center_names);
         btn_mark_attendance = (Button) view.findViewById(R.id.btn_mark_attendance);
         // btn_select = (Button)findViewById(R.id.btn_select);
         // pay_total = (TextView)findViewById(R.id.pay_total);
+        Date c = java.util.Calendar.getInstance().getTime();
         center_attendances = (ListView)view.findViewById(R.id.center_attendances);
-        initItems();
-        Log.e("SIZE ",""+centers.size());
-        pl_center_adapter = new PaymentLoadCentersAdapter(getContext(),centers);
-        center_names.setAdapter(pl_center_adapter);
-        spinner_center_names.setAdapter(pl_center_adapter);
-        setGroupsforCenter(null);
-        center_names.setThreshold(1);
+        SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
+        str_today = df.format(c);
 
+      //  initItems();
+//        Log.e("SIZE ",""+centers.size());
+//        pl_center_adapter = new PaymentLoadCentersAdapter(getContext(),centers);
+//        //center_names.setAdapter(pl_center_adapter);
+//        spinner_center_names.setAdapter(pl_center_adapter);
+//        setGroupsforCenter(null);
+        center_names.setThreshold(1);
+        SubmitDataService.stopAsync();
+        new LoadClientAttendanceInfo().execute();
+
+        btn_mark_attendance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(selected_center == null || selected_group == null){
+                    Utility.showMessage("Please Select center and group",getContext());
+                }
+                else if(selected_group.clients.size()==0){
+                    Utility.showMessage("There are no Clients",getContext());
+                }
+                else{
+                    SubmitDataService.stopAsync();
+                    new SaveClientAttendants().execute();
+                }
+            }
+        });
 
         spinner_center_names.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -168,8 +207,11 @@ public class AttendanceFragment extends Fragment {
 
     private void populate_group_payments(int group_index){
         selected_group =groups.get(group_index);
-        AttendanceAdapter attendanceAdapter = new AttendanceAdapter(getContext(),selected_group.payees);
+     //   AttendanceAdapter attendanceAdapter = new AttendanceAdapter(getContext(),selected_group.payees);
+     //   center_attendances.setAdapter(attendanceAdapter);
+         attendanceAdapter = new AttendanceAdapter(getContext(),groupClients.get(selected_group.id));
         center_attendances.setAdapter(attendanceAdapter);
+
     }
 
     public void setGroupsforCenter(CenterItem item){
@@ -184,7 +226,7 @@ public class AttendanceFragment extends Fragment {
             center_groups.setAdapter(pl_group_adapter);
         }
         else{
-            groups = centerGroups.get(item.name);
+            groups = centerGroups.get(item.id);
             pl_group_adapter = new PaymentLoadGroupsAdapter(getContext(),groups);
             center_groups.setAdapter(pl_group_adapter);
         }
@@ -273,5 +315,91 @@ public class AttendanceFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void setupinfo(){
+        if(info.centers.size()==0){
+            Utility.showMessage("Details are not available",getContext());
+            spinner_center_names.setAdapter(new PaymentLoadCentersAdapter(getContext(),new ArrayList<CenterItem>()));
+            setGroupsforCenter(null);
+        }
+        else{
+            centers = info.centers;
+            initialCenters = centers;
+            centerGroups = info.centergroups;
+            allgroups = info.groups;
+            groupClients = info.groupclients;
+            spinner_center_names.setAdapter(new PaymentLoadCentersAdapter(getContext(),centers));
+            setGroupsforCenter(null);
+
+            Log.e("FLI CENTERS",centers.toString());
+            Log.e("FLI CENTER GROUPS",centerGroups.toString());
+            Log.e("FLI GROUPS",allgroups.toString());
+            Log.e("FLI GROUP CLIENTS",groupClients.toString());
+
+
+        }
+    }
+
+    private void removeGroupFromLists(){
+       groups =  centerGroups.get(selected_center.id);
+       int pos_selectedgroup = groups.indexOf(selected_group);
+        groups.remove(pos_selectedgroup);
+        centerGroups.put(selected_center.id,groups);
+        if(groups.size()==0){
+            int pos_selectedcenter = initialCenters.indexOf(selected_center);
+            centerGroups.remove(selected_center.id);
+            centers.remove(pos_selectedcenter);
+            initialCenters.remove(pos_selectedcenter);
+        }
+        spinner_center_names.setAdapter(new PaymentLoadCentersAdapter(getContext(),centers));
+    }
+
+    class SaveClientAttendants extends AsyncTask<Void,Void,Void>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            prgController.showProgressBar("Saving...");
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            removeGroupFromLists();
+            prgController.hideProgressBar();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            marked_clients = attendanceAdapter.markeditems();
+            MarkedAttendace attendace = new MarkedAttendace();
+            attendace.center_id =selected_center.id;
+            attendace.group_id =selected_group.id;
+            attendace.clients = marked_clients;
+            attendace.meeting_date = str_today;
+            dmManager.saveMarkedAttendance(attendace);
+            return null;
+        }
+    }
+
+    class LoadClientAttendanceInfo extends AsyncTask<Void,ClientAttendanceInfo,ClientAttendanceInfo> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            prgController.showProgressBar("Loading Data...");
+        }
+
+        @Override
+        protected void onPostExecute(ClientAttendanceInfo clientPaymentsInfo) {
+            super.onPostExecute(clientPaymentsInfo);
+            prgController.hideProgressBar();
+            info = clientPaymentsInfo;
+            setupinfo();
+        }
+
+        @Override
+        protected ClientAttendanceInfo doInBackground(Void... params) {
+            return dmManager.getAvailableAttendance();
+        }
     }
 }

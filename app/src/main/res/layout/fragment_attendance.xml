@@ -75,10 +75,7 @@
                 android:layout_height="match_parent"
                 android:dividerHeight="5dp"/>
         </LinearLayout>
-
+        <include layout="@layout/layout_progress_bar" />
     </RelativeLayout>
-
-
-
 
 </FrameLayout>

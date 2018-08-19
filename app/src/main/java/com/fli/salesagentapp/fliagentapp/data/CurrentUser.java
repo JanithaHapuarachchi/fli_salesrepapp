@@ -11,6 +11,7 @@ public class CurrentUser {
     public static String userid;
     public static String authkey;
     public static String loggeddate;
+    public static String staffid;
     public static CurrentUser currentUser;
 
     public static CurrentUser getCurrentUser() {
@@ -22,7 +23,7 @@ public class CurrentUser {
 
     @Override
     public String toString() {
-        return "Name: "+username+" id: "+userid+" password: "+password+" loggeddate: "+loggeddate+" authkey: "+authkey;
+        return "Name: "+username+" id: "+userid+" password: "+password+" loggeddate: "+loggeddate+" authkey: "+authkey+" staffid: "+staffid;
     }
 }
 

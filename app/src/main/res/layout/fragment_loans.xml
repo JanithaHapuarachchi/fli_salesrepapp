@@ -44,7 +44,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.2"
                         android:background="@drawable/round_border_min_edge_textbox"
-                        android:hint="Loan No."
+                        android:hint="Loan Account No."
                         android:padding="10dp"
                         android:textColor="@color/app_text_color"
                         android:textColorHint="@color/app_text_color"
@@ -85,7 +85,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.2"
-                        android:text="0012345"
+                        android:text=""
                         android:textColor="@color/app_text_color"
                         android:textSize="15dp" />
 
@@ -116,7 +116,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.2"
-                        android:text="A.B.C. Perera"
+                        android:text=""
                         android:textColor="@color/app_text_color"
                         android:textSize="15dp" />
 
@@ -146,7 +146,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.2"
-                        android:text="Loan Name"
+                        android:text=""
                         android:textColor="@color/app_text_color"
                         android:textSize="15dp" />
 
@@ -176,7 +176,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.2"
-                        android:text="10000 Rs."
+                        android:text=""
                         android:textColor="@color/app_text_color"
                         android:textSize="15dp" />
 
@@ -206,7 +206,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.2"
-                        android:text="8000 Rs."
+                        android:text=""
                         android:textColor="@color/app_text_color"
                         android:textSize="15dp" />
 
@@ -236,7 +236,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.2"
-                        android:text="2000 Rs."
+                        android:text=""
                         android:textColor="@color/app_text_color"
                         android:textSize="15dp" />
 
@@ -266,7 +266,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.2"
-                        android:text="1111"
+                        android:text=""
                         android:textColor="@color/app_text_color"
                         android:textSize="15dp" />
 
@@ -388,7 +388,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.2"
-                        android:text="1111"
+                        android:text=""
                         android:textColor="@color/app_text_color"
                         android:textSize="15dp" />
 
@@ -556,7 +556,7 @@
             </LinearLayout>
 
         </ScrollView>
-
+        <include layout="@layout/layout_progress_bar" />
     </RelativeLayout>
 
 </FrameLayout>

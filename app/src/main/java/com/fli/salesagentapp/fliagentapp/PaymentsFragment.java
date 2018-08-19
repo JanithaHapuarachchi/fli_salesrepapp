@@ -2,6 +2,7 @@ package com.fli.salesagentapp.fliagentapp;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -21,8 +22,14 @@ import com.fli.salesagentapp.fliagentapp.adapters.IssuePaymentAdapter;
 import com.fli.salesagentapp.fliagentapp.adapters.PaymentLoadCentersAdapter;
 import com.fli.salesagentapp.fliagentapp.adapters.PaymentLoadGroupsAdapter;
 import com.fli.salesagentapp.fliagentapp.data.CenterItem;
+import com.fli.salesagentapp.fliagentapp.data.ClientItem;
+import com.fli.salesagentapp.fliagentapp.data.ClientPaymentsInfo;
 import com.fli.salesagentapp.fliagentapp.data.GroupItem;
 import com.fli.salesagentapp.fliagentapp.data.PayeeItem;
+import com.fli.salesagentapp.fliagentapp.services.SubmitDataService;
+import com.fli.salesagentapp.fliagentapp.utils.DataManager;
+import com.fli.salesagentapp.fliagentapp.utils.ProgressBarController;
+import com.fli.salesagentapp.fliagentapp.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,8 +47,9 @@ public class PaymentsFragment extends Fragment {
 
     final String TAG_PAYMENT = "Payment";
     ArrayList<CenterItem> initialCenters,centers;
+   // ArrayList<GroupItem> groups;
     HashMap<String,ArrayList<GroupItem>> centerGroups;
-    HashMap<String,ArrayList<PayeeItem>> groupPayees;
+    HashMap<String,ArrayList<ClientItem>> groupClients;
     AutoCompleteTextView center_names;
     Spinner center_groups,spinner_center_names;
     Button btn_select,btn_pay;
@@ -50,9 +58,12 @@ public class PaymentsFragment extends Fragment {
     PaymentLoadCentersAdapter pl_center_adapter;
     PaymentLoadGroupsAdapter pl_group_adapter;
     CenterItem selected_center;
-    ArrayList<GroupItem> groups;
+    ArrayList<GroupItem> groups,allgroups;
     ArrayList<PayeeItem> payees;
     GroupItem selected_group;
+    ClientPaymentsInfo info;
+    DataManager dmManager;
+    ProgressBarController prgController;
 
     boolean init_centers =false;
     boolean init_groups =false;
@@ -111,12 +122,18 @@ public class PaymentsFragment extends Fragment {
         pay_total = (TextView)view.findViewById(R.id.pay_total);
         center_payees = (ListView)view.findViewById(R.id.center_payees);
         center_payees.setItemsCanFocus(true);
-        initItems();
-        Log.e("SIZE ",""+centers.size());
+
+        dmManager = new DataManager(getContext());
+        prgController  =new ProgressBarController(getActivity());
+
+        //initItems();
+        SubmitDataService.stopAsync();
+        new LoadClientPaymentInfo().execute();
+//        Log.e("SIZE ",""+centers.size());
         // pl_center_adapter = new PaymentLoadCentersAdapter(getApplicationContext(),centers);
         // center_names.setAdapter(pl_center_adapter);
-        spinner_center_names.setAdapter(new PaymentLoadCentersAdapter(getContext(),centers));
-        setGroupsforCenter(null);
+//        spinner_center_names.setAdapter(new PaymentLoadCentersAdapter(getContext(),centers));
+//        setGroupsforCenter(null);
         center_names.setThreshold(1);
         center_names.addTextChangedListener(new TextWatcher() {
             @Override
@@ -131,7 +148,7 @@ public class PaymentsFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                search_center_name(s.toString());
+              //  search_center_name(s.toString());
             }
         });
 
@@ -225,7 +242,9 @@ public class PaymentsFragment extends Fragment {
 
     private void populate_group_payments(int group_index){
         selected_group =groups.get(group_index);
-        IssuePaymentAdapter issuePaymentAdapter = new IssuePaymentAdapter(getContext(),selected_group.payees,pay_total);
+      //  IssuePaymentAdapter issuePaymentAdapter = new IssuePaymentAdapter(getContext(),selected_group.payees,pay_total);
+      //  center_payees.setAdapter(issuePaymentAdapter);
+        IssuePaymentAdapter issuePaymentAdapter = new IssuePaymentAdapter(getContext(),groupClients.get(selected_group.id),pay_total);
         center_payees.setAdapter(issuePaymentAdapter);
 
     }
@@ -294,7 +313,7 @@ public class PaymentsFragment extends Fragment {
             center_groups.setAdapter(new PaymentLoadGroupsAdapter(getContext(),defaultgrouList));
         }
         else{
-            groups = centerGroups.get(item.name);
+            groups = centerGroups.get(item.id);
             // pl_group_adapter = new PaymentLoadGroupsAdapter(getApplicationContext(),groups);
             center_groups.setAdapter(new PaymentLoadGroupsAdapter(getContext(),groups));
         }
@@ -366,5 +385,50 @@ public class PaymentsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+
+    private void setupinfo(){
+        if(info.centers.size()==0){
+            Utility.showMessage("Details are not available",getContext());
+            spinner_center_names.setAdapter(new PaymentLoadCentersAdapter(getContext(),new ArrayList<CenterItem>()));
+            setGroupsforCenter(null);
+        }
+        else{
+            centers = info.centers;
+            initialCenters = centers;
+            centerGroups = info.centergroups;
+            allgroups = info.groups;
+            groupClients = info.groupclients;
+            spinner_center_names.setAdapter(new PaymentLoadCentersAdapter(getContext(),centers));
+            setGroupsforCenter(null);
+            Log.e("FLI CENTERS",centers.toString());
+            Log.e("FLI CENTER GROUPS",centerGroups.toString());
+            Log.e("FLI GROUPS",allgroups.toString());
+            Log.e("FLI GROUP CLIENTS",groupClients.toString());
+
+
+        }
+    }
+
+    class LoadClientPaymentInfo extends AsyncTask<Void,ClientPaymentsInfo,ClientPaymentsInfo>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            prgController.showProgressBar("Loading Data...");
+        }
+
+        @Override
+        protected void onPostExecute(ClientPaymentsInfo clientPaymentsInfo) {
+            super.onPostExecute(clientPaymentsInfo);
+            prgController.hideProgressBar();
+            info = clientPaymentsInfo;
+            setupinfo();
+        }
+
+        @Override
+        protected ClientPaymentsInfo doInBackground(Void... params) {
+            return dmManager.getAvailablePayments();
+        }
     }
 }

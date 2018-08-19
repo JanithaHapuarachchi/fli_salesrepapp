@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.fli.salesagentapp.fliagentapp.R;
 import com.fli.salesagentapp.fliagentapp.data.AttendanceItem;
+import com.fli.salesagentapp.fliagentapp.data.ClientItem;
 import com.fli.salesagentapp.fliagentapp.data.PayeeItem;
 
 import java.util.ArrayList;
@@ -30,7 +31,8 @@ import java.util.ArrayList;
 
 public class AttendanceAdapter extends ArrayAdapter {
 
-    private final ArrayList<PayeeItem> items ;
+   // private final ArrayList<PayeeItem> items ;
+    public ArrayList<ClientItem> items ;
     private final LayoutInflater mInflater;
     private final Context context;
     TextView pay_total;
@@ -50,7 +52,7 @@ public class AttendanceAdapter extends ArrayAdapter {
     }
 
 
-    public AttendanceAdapter(Context context,ArrayList<PayeeItem> items) {
+    public AttendanceAdapter(Context context,ArrayList<ClientItem> items) {
         super(context, R.layout.layout_attendance,items);
         this.items = items;
         this.mInflater = LayoutInflater.from(context);
@@ -75,6 +77,7 @@ public class AttendanceAdapter extends ArrayAdapter {
             holder.txt_name=  (TextView)v.findViewById(R.id.txt_name);//(R.id.txt_name, v.findViewById(R.id.txt_name));
             holder.layout_attendance =  (LinearLayout) v.findViewById(R.id.layout_attendance); //(R.id.txt_payment, v.findViewById(R.id.txt_payment));
             holder.spinner_today_attendace =  (Spinner) v.findViewById(R.id.spinner_today_attendace);
+            holder.spinner_today_attendace.setTag(position);
             holder.data =  new DataHolder(context);
             holder.ata = new AttendaceTypesAdapter(context);
             //(R.id.txt_payment_due, v.findViewById(R.id.txt_payment_due));
@@ -88,7 +91,8 @@ public class AttendanceAdapter extends ArrayAdapter {
         }
 
         final ViewHolder holder = (ViewHolder) v.getTag();
-        PayeeItem item = items.get(position);
+      //  PayeeItem item = items.get(position);
+        final ClientItem item = items.get(position);
         if(((LinearLayout)  holder.layout_attendance).getChildCount() > 0)
             ((LinearLayout) holder.layout_attendance).removeAllViews();
         TextView tv;
@@ -126,7 +130,9 @@ public class AttendanceAdapter extends ArrayAdapter {
         holder.spinner_today_attendace.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                int x= (int) parent.getTag();
+                Log.e("FLI TAG",  items.get(x).toString());
+                items.get(x).attendancetype =position+1;
             }
 
             @Override
@@ -137,6 +143,10 @@ public class AttendanceAdapter extends ArrayAdapter {
         holder.txt_name.setText(item.name);
 
         return v;
+    }
+
+    public ArrayList<ClientItem> markeditems(){
+        return items;
     }
 
 

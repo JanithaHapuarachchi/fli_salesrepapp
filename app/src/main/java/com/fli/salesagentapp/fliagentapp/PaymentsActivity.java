@@ -154,8 +154,9 @@ public class PaymentsActivity extends AppCompatActivity { // implements TextWatc
 
     private void populate_group_payments(int group_index){
         selected_group =groups.get(group_index);
-        IssuePaymentAdapter issuePaymentAdapter = new IssuePaymentAdapter(getApplicationContext(),selected_group.payees,pay_total);
-        center_payees.setAdapter(issuePaymentAdapter);
+//        IssuePaymentAdapter issuePaymentAdapter = new IssuePaymentAdapter(getApplicationContext(),selected_group.payees,pay_total);
+//        center_payees.setAdapter(issuePaymentAdapter);
+
 
     }
 

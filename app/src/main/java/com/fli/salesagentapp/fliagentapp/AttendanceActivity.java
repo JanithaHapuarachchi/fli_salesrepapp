@@ -108,8 +108,8 @@ public class AttendanceActivity extends AppCompatActivity {
 
     private void populate_group_payments(int group_index){
         selected_group =groups.get(group_index);
-        AttendanceAdapter attendanceAdapter = new AttendanceAdapter(getApplicationContext(),selected_group.payees);
-        center_attendances.setAdapter(attendanceAdapter);
+//        AttendanceAdapter attendanceAdapter = new AttendanceAdapter(getApplicationContext(),selected_group.payees);
+//        center_attendances.setAdapter(attendanceAdapter);
     }
 
     public void setGroupsforCenter(CenterItem item){

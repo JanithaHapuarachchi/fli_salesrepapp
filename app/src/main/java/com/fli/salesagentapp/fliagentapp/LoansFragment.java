@@ -5,19 +5,33 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.icu.util.Calendar;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
+import com.fli.salesagentapp.fliagentapp.data.PayeeItem;
+import com.fli.salesagentapp.fliagentapp.data.RecievedLoan;
+import com.fli.salesagentapp.fliagentapp.services.SubmitDataService;
+import com.fli.salesagentapp.fliagentapp.utils.Constants;
+import com.fli.salesagentapp.fliagentapp.utils.DataManager;
+import com.fli.salesagentapp.fliagentapp.utils.ProgressBarController;
+import com.fli.salesagentapp.fliagentapp.utils.Utility;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -33,12 +47,19 @@ import java.util.Locale;
 public class LoansFragment extends Fragment {
 
     LinearLayout layout_cheque_details;
-    EditText loan_date;
-
+    EditText loan_date,edit_loan_default,edit_loan_payment,edit_loan_cheque,edit_loan_bank;
+    TextView txt_loan_id,txt_loan_client,txt_loan_name,txt_loan_totbal,txt_loan_totout,txt_loan_arrears,txt_loan_default,txt_loan_rental;
+    ProgressBarController prgController;
     RadioButton pay_type_cheque,pay_type_cash;
     private DatePicker datePicker;
     private Calendar calendar;
     private int year, month, day;
+    Button btn_load_details,btn_pay;
+    EditText txt_loan_no;
+    RecievedLoan selected_loan;
+    DataManager dmManager;
+    boolean cheque_checked = false;
+    String str_payday;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -90,16 +111,86 @@ public class LoansFragment extends Fragment {
         loan_date = (EditText)view.findViewById(R.id.edit_loan_date);
         pay_type_cheque = (RadioButton)view.findViewById(R.id.pay_type_cheque);
         pay_type_cash = (RadioButton)view.findViewById(R.id.pay_type_cash);
+        btn_load_details = (Button)view.findViewById(R.id.btn_load_details);
+        txt_loan_no = (EditText)view.findViewById(R.id.txt_loan_no);
+        edit_loan_default = (EditText)view.findViewById(R.id.edit_loan_default);
+        edit_loan_payment = (EditText)view.findViewById(R.id.edit_loan_payment);
+        edit_loan_cheque = (EditText)view.findViewById(R.id.edit_loan_cheque);
+        edit_loan_bank = (EditText)view.findViewById(R.id.edit_loan_bank);
+        txt_loan_id = (TextView)view.findViewById(R.id.txt_loan_id);
+        txt_loan_client = (TextView)view.findViewById(R.id.txt_loan_client);
+        txt_loan_name = (TextView)view.findViewById(R.id.txt_loan_name);
+        txt_loan_totbal = (TextView)view.findViewById(R.id.txt_loan_totbal);
+        txt_loan_totout  = (TextView)view.findViewById(R.id.txt_loan_totout);
+        txt_loan_arrears = (TextView)view.findViewById(R.id.txt_loan_arrears);
+        txt_loan_default = (TextView)view.findViewById(R.id.txt_loan_default);
+        txt_loan_rental = (TextView)view.findViewById(R.id.txt_loan_rental);
+        btn_pay = (Button)view.findViewById(R.id.btn_pay);
+        dmManager = new DataManager(getContext());
+        prgController = new ProgressBarController(getActivity());
+        btn_load_details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String loanno = txt_loan_no.getText().toString();
+                if(!loanno.equals("")){
+                    SubmitDataService.stopAsync();
+                  new LoadLoanData().execute(loanno);
+                }
+                else{
+                    Utility.showMessage("Please Enter Valid Loan Noumber",getContext());
+                }
+            }
+        });
+
+        btn_pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PayeeItem payitem = new PayeeItem();
+                String loanno = txt_loan_no.getText().toString();
+                String payment = edit_loan_payment.getText().toString();
+                String checqueno = edit_loan_cheque.getText().toString();
+                String bankno = edit_loan_bank.getText().toString();
+                String paydate = loan_date.getText().toString();
+                if(selected_loan == null|| payment.equals("")){
+                    Utility.showMessage("Please Enter Loan Noumber and Payment",getContext());
+                }
+                else{
+                  //  str_payday = new SimpleDateFormat(Constants.DATE_FORMAT).format(paydate);
+                    payitem.loan_id = selected_loan.loan_id;
+                    payitem.client_id = selected_loan.client_id;
+                    payitem.amount =payment;
+                    payitem.center_id = selected_loan.center_id;
+                    payitem.group_id = selected_loan.group_id;
+                    payitem.transaction_date = str_payday;
+                    payitem.note = "";
+                    if(cheque_checked){
+                        payitem.payment_type_id = Constants.PAYMENT_TYPE_ID_CHEQUE;
+                        payitem.bank_no = bankno;
+                        payitem.checque_no = checqueno;
+                    }
+                    else{
+                        payitem.bank_no = "";
+                        payitem.checque_no = "";
+                        payitem.payment_type_id = Constants.PAYMENT_TYPE_ID_CASH;
+                    }
+                    new SaveLoanPayment().execute(payitem);
+                }
+            }
+        });
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
             calendar = Calendar.getInstance();
             year = calendar.get(Calendar.YEAR);
             month = calendar.get(Calendar.MONTH);
             day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
+        str_payday = df.format(c);
+        loan_date.setText(str_payday);
            // showDate(year, month+1, day);
 
-        }
 
         loan_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,7 +215,7 @@ public class LoansFragment extends Fragment {
                 layout_cheque_details.setVisibility(View.GONE);
             }
         });
-        loan_date.setText(day+"-"+(month+1)+"-"+year);
+      //  loan_date.setText(day+"-"+(month+1)+"-"+year);
 
         return view;
     }
@@ -159,14 +250,14 @@ public class LoansFragment extends Fragment {
 
 
     public void onPayTypeClicked(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
+        cheque_checked = ((RadioButton) view).isChecked();
         switch(view.getId()) {
             case R.id.pay_type_cheque:
-                if (checked)
+                if (cheque_checked)
                     layout_cheque_details.setVisibility(View.VISIBLE);
                 break;
             case R.id.pay_type_cash:
-                if (checked)
+                if (cheque_checked)
                     layout_cheque_details.setVisibility(View.GONE);
                 break;
         }
@@ -229,8 +320,106 @@ public class LoansFragment extends Fragment {
             populateSetDate(yy, mm+1, dd);
         }
         public void populateSetDate(int year, int month, int day) {
-            loan_date.setText(day+"-"+month+"-"+year);
+            Log.e("FLI DATE",""+year+" "+month+" "+day);
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.set(Calendar.MONTH, month-1);
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.DAY_OF_MONTH,day);
+            Date c = calendar.getTime();
+            SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
+            str_payday = df.format(c);
+            loan_date.setText(str_payday);
+
         }
 
     }
+
+    private void populateLoanDetails(RecievedLoan loan){
+        if(loan ==null){
+            selected_loan = null;
+            txt_loan_id.setText("");
+            txt_loan_client.setText("");
+            txt_loan_name.setText("");
+            txt_loan_totbal.setText("");
+            txt_loan_totout.setText("");
+            txt_loan_arrears.setText("");
+            txt_loan_default.setText("");
+            txt_loan_rental.setText("");
+            Utility.showMessage("Loan Details are Not available",getContext());
+        }
+        else{
+            selected_loan = loan;
+            txt_loan_id.setText(loan.loan_id);
+            txt_loan_client.setText(loan.client_name);
+            txt_loan_name.setText(loan.loan_name);
+            txt_loan_totbal.setText(loan.total_balance);
+            txt_loan_totout.setText(loan.outstanding_balance);
+            txt_loan_arrears.setText(loan.arrears);
+            txt_loan_default.setText(loan.def);
+            txt_loan_rental.setText(loan.rental);
+        }
+    }
+
+    private void clearAllData(){
+        selected_loan = null;
+        txt_loan_id.setText("");
+        txt_loan_client.setText("");
+        txt_loan_name.setText("");
+        txt_loan_totbal.setText("");
+        txt_loan_totout.setText("");
+        txt_loan_arrears.setText("");
+        txt_loan_default.setText("");
+        txt_loan_rental.setText("");
+        edit_loan_bank.setText("");
+        edit_loan_default.setText("");
+        edit_loan_cheque.setText("");
+        edit_loan_payment.setText("");
+    }
+
+    class SaveLoanPayment extends AsyncTask<PayeeItem,Void,Void>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            prgController.showProgressBar("Saving Loan Data...");
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            prgController.hideProgressBar();
+            Utility.showMessage("Successfully Saved Payment",getContext());
+            clearAllData();
+        }
+
+        @Override
+        protected Void doInBackground(PayeeItem... params) {
+            PayeeItem item = params[0];
+            dmManager.savePayment(item);
+            return null;
+        }
+    }
+
+    class LoadLoanData extends AsyncTask<String,Void,RecievedLoan>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            prgController.showProgressBar("Searching Loan Data...");
+        }
+
+        @Override
+        protected void onPostExecute(RecievedLoan loan) {
+            super.onPostExecute(loan);
+            prgController.hideProgressBar();
+            populateLoanDetails(loan);
+
+
+        }
+
+        @Override
+        protected RecievedLoan doInBackground(String... params) {
+            return dmManager.getDetailsforLoanID(params[0]);
+        }
+    }
+
 }

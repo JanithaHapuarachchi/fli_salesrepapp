@@ -11,4 +11,11 @@ public class GroupItem {
     public String id;
     public String name;
     public ArrayList<PayeeItem> payees;
+    public ArrayList<ClientItem> clients;
+
+
+    @Override
+    public String toString() {
+        return "id: "+id+", name :"+name;
+    }
 }

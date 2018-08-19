@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.fli.salesagentapp.fliagentapp.PaymentsActivity;
 import com.fli.salesagentapp.fliagentapp.R;
+import com.fli.salesagentapp.fliagentapp.data.ClientItem;
 import com.fli.salesagentapp.fliagentapp.data.CollectionItem;
 import com.fli.salesagentapp.fliagentapp.data.PayeeItem;
 
@@ -26,10 +27,11 @@ import java.util.ArrayList;
 public class IssuePaymentAdapter extends BaseAdapter {
 
     private  ArrayList<PayeeItem> items ;
+    private  ArrayList<ClientItem> clientItems ;
     private final LayoutInflater mInflater;
     private final Context context;
     TextView pay_total;
-    int total = 0 ;
+    double total = 0 ;
     int beforeval;
 
     static class ViewHolder {
@@ -38,24 +40,33 @@ public class IssuePaymentAdapter extends BaseAdapter {
         int no;
     }
 
-    public IssuePaymentAdapter(Context context,ArrayList<PayeeItem> items,TextView pay_total) {
-       // super(context, R.layout.layout_payment_item,items);
-        this.items = items;
+//    public IssuePaymentAdapter(Context context,ArrayList<PayeeItem> items,TextView pay_total) {
+//       // super(context, R.layout.layout_payment_item,items);
+//        this.items = items;
+//        this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);//LayoutInflater.from(context);
+//        this.context =context;
+//        this.pay_total = pay_total;
+//        total = 0;
+//    }
+
+    public IssuePaymentAdapter(Context context,ArrayList<ClientItem> items,TextView pay_total) {
+        // super(context, R.layout.layout_payment_item,items);
+        this.clientItems = items;
         this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);//LayoutInflater.from(context);
         this.context =context;
         this.pay_total = pay_total;
         total = 0;
     }
 
-
     @Override
     public int getCount() {
-        return items.size();
+      //  return items.size();
+        return clientItems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return  items.get(position);
+        return  clientItems.get(position);
     }
 
     @Override
@@ -98,17 +109,23 @@ public class IssuePaymentAdapter extends BaseAdapter {
 //        txt_payment = (EditText) v.getTag(R.id.txt_payment);
 //        txt_payment_due = (TextView) v.getTag(R.id.txt_payment_due);
 
-        final PayeeItem item = items.get(position);
-        holder.txt_id.setText(String.valueOf(item.id));
+       // final PayeeItem item = items.get(position);
+        final ClientItem item = clientItems.get(position);
+        Log.e("FLI def",item.toString());
+       // holder.txt_id.setText(String.valueOf(item.id));
+        holder.txt_id.setText(String.valueOf(item.loanid));
         holder.txt_name.setText(item.name);
-        holder.txt_payment.setText(item.payment);
+      //  holder.txt_payment.setText(item.payment);
+        holder.txt_payment.setText(item.def);
         holder.txt_payment.setSelection(holder.txt_payment.getText().length());
        // holder.txt_payment.setTag(position);
-        holder.txt_payment_due.setText(item.payment_due);
+      //  holder.txt_payment_due.setText(item.payment_due);
+        holder.txt_payment_due.setText(item.rental);
         holder.no = position;
-        total += Integer.parseInt(item.payment);
+
+        total += Double.parseDouble(item.def.trim());
         pay_total.setText(""+total);
-        Log.e("FLI RE 1 TOTAL ",""+total+"->"+position+"->"+item.payment);
+        Log.e("FLI RE 1 TOTAL ",""+total+"->"+position+"->"+item.def);
 
         TextEditor oldWatcher = (TextEditor) holder.txt_payment.getTag();
         if(oldWatcher != null)
@@ -239,7 +256,8 @@ public class IssuePaymentAdapter extends BaseAdapter {
             }
 
             Log.e("FLI AMOUNT",amount.getText().toString());
-            items.get(position).payment =text;
+            //items.get(position).payment =text;
+            clientItems.get(position).def =text;
           //  pay_total.setText(total);
            // return;
         }

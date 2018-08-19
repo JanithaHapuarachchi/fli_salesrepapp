@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import com.fli.salesagentapp.fliagentapp.data.CurrentUser;
 import com.fli.salesagentapp.fliagentapp.data.ResObject;
+import com.fli.salesagentapp.fliagentapp.db.DBOperations;
 import com.fli.salesagentapp.fliagentapp.utils.Constants;
 import com.fli.salesagentapp.fliagentapp.utils.ProgressBarController;
 import com.fli.salesagentapp.fliagentapp.utils.RequestHandler;
@@ -36,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     WSCalls wscalls;
     String str_last_logged_date;
     static CurrentUser currentUser;
+    DBOperations dbOperations;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         txt_password = (EditText)findViewById(R.id.txt_password);
         btn_login = (Button)findViewById(R.id.btn_login);
         context =getApplicationContext();
-
+        //new DBOperations(getApplicationContext()).getSavedAttendace();
         wscalls = new WSCalls(getApplicationContext());
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
@@ -177,6 +179,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(jsonResponse.getBoolean("authenticated")){
                     currentUser.authkey = jsonResponse.getString("base64EncodedAuthenticationKey");
                     currentUser.userid = jsonResponse.getString("userId");
+                    currentUser.staffid = jsonResponse.getString("staffId");
                     Utility.setCurrentUser(getApplicationContext(),currentUser);
                     Intent in =  new Intent(getApplicationContext(),MainMenu.class);
                     in.putExtra(Constants.SHOULD_SYNC_AGAIN,true);

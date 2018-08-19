@@ -1,7 +1,10 @@
 package com.fli.salesagentapp.fliagentapp.utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -39,6 +42,13 @@ public class Utility {
         return preferences.getString(Constants.LAST_LOGGED_DATE, "");
     }
 
+    public static void clearCurrentUserLoginDate(Context context){
+        SharedPreferences preferences =  getSharedPrefs(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Constants.LAST_LOGGED_DATE,"");
+        editor.commit();
+    }
+
     public static boolean setCurrentUser(Context context, CurrentUser currentuser){
         Log.e("FLI CURRENT USER",currentuser.toString());
         SharedPreferences preferences =  getSharedPrefs(context);
@@ -48,6 +58,7 @@ public class Utility {
         editor.putString(Constants.LAST_LOGGED_DATE,currentuser.loggeddate);
         editor.putString(Constants.AUTHENTICATION_KEY,currentuser.authkey);
         editor.putString(Constants.USER_ID,currentuser.userid);
+        editor.putString(Constants.STAFF_ID,currentuser.staffid);
         editor.commit();
 
         return true;
@@ -76,6 +87,11 @@ public class Utility {
 
     }
 
+    public static String getStaffID(Context context){
+        SharedPreferences preferences =  getSharedPrefs(context);
+        return preferences.getString(Constants.STAFF_ID, "");
+    }
+
     public static String getUserID(Context context){
         SharedPreferences preferences =  getSharedPrefs(context);
         return preferences.getString(Constants.USER_ID, "");
@@ -98,6 +114,25 @@ public class Utility {
     public static boolean isJSONKeyAvailable(JSONObject jObject,String key){
         if(jObject.has(key)){
             return true;
+        }
+        return false;
+    }
+
+    public static boolean isConnected(Context context) {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+    public static boolean isMajorServiceRunning(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager
+                .getRunningServices(Integer.MAX_VALUE)) {
+            if ("family.mobitel.cdcsystem.services.MajorSyncProvider".equals(service.service
+                    .getClassName())) {
+                return true;
+            }
         }
         return false;
     }

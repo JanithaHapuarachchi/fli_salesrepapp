@@ -33,6 +33,9 @@ public class TableAttendanceTransactions {
         database.execSQL(TABLE_CREATE);
     }
 
+    public static void droptable(SQLiteDatabase database) {
+        database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+    }
 
     public static void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.e(TableLoanTransactions.class.getName(),
