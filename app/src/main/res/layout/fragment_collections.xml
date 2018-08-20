@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:dividerHeight="10dp"
             android:padding="10dp"></ListView>
-
+        <include layout="@layout/layout_progress_bar" />
     </RelativeLayout>
 
 

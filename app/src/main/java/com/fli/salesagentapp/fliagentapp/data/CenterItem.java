@@ -8,6 +8,9 @@ public class CenterItem {
 
     public String id;
     public String name;
+    public int no_of_loans;
+    public double total_collection;
+    public int pending_sync_count;
 
     @Override
     public String toString() {

@@ -12,6 +12,7 @@ import com.fli.salesagentapp.fliagentapp.data.ClientAttendanceInfo;
 import com.fli.salesagentapp.fliagentapp.data.ClientItem;
 import com.fli.salesagentapp.fliagentapp.data.ClientPaymentsInfo;
 import com.fli.salesagentapp.fliagentapp.data.GroupItem;
+import com.fli.salesagentapp.fliagentapp.data.GroupPaymentItem;
 import com.fli.salesagentapp.fliagentapp.data.MarkedAttendace;
 import com.fli.salesagentapp.fliagentapp.data.PayeeItem;
 import com.fli.salesagentapp.fliagentapp.data.RecievedLoan;
@@ -39,7 +40,7 @@ public class DBOperations  extends SQLiteOpenHelper {
     public void truncateDB(){
         db = this.getWritableDatabase();
         //TableAttendanceTransactions.droptable(db);
-        //TableLoanTransactions.droptable(db);
+        TableLoanTransactions.droptable(db);
         TableRecievedLoans.droptable(db);
         TableAttendanceTransactions.onCreate(db);
         TableLoanTransactions.onCreate(db);
@@ -257,6 +258,9 @@ public class DBOperations  extends SQLiteOpenHelper {
         return centers;
     }
 
+
+
+
     public ArrayList<MarkedAttendace> getAttendaceMarkedGroups(){
         ArrayList<MarkedAttendace> attendaces = new ArrayList<MarkedAttendace>();
         String countQuery;
@@ -314,6 +318,59 @@ public class DBOperations  extends SQLiteOpenHelper {
     }
 
 
+    public String getCenterNameforId(String center_id){
+        String center_name = "";
+        String countQuery = "SELECT "
+                +TableRecievedLoans.LOAN_CENTER_NAME+""
+                +" FROM " + TableRecievedLoans.TABLE_NAME+"  WHERE "+TableRecievedLoans.LOAN_CENTER_ID+" =?";
+        Cursor cursor = db.rawQuery(countQuery, new String[]{center_id});
+        if(cursor.moveToFirst()){
+            center_name = cursor.getString(0);
+        }
+        return center_name;
+    }
+
+    public int getPendingSyncCount(String center_id){
+        int count = 0;
+        String countQuery = "SELECT COUNT("
+                +TableLoanTransactions.DEPOSIT_LOAN_ID+") AS pendingsynccount"
+                +" FROM " + TableLoanTransactions.TABLE_NAME+"  WHERE "+TableLoanTransactions.DEPOSIT_CENTER_ID+" =?  AND "+TableLoanTransactions.DEPOSIT_SYNCED+" =?";
+        Cursor cursor = db.rawQuery(countQuery, new String[]{center_id,Constants.SYCED_NOT});
+        if(cursor.moveToFirst()){
+            count = cursor.getInt(0);
+        }
+        return count;
+    }
+
+    public ArrayList<CenterItem> getCollectionSheet(){
+        ArrayList<CenterItem>  centers = new ArrayList<CenterItem>();
+        CenterItem center;
+
+        db = this.getReadableDatabase();
+        String countQuery = "SELECT COUNT ("
+                +TableLoanTransactions.DEPOSIT_LOAN_ID+") AS loancount, SUM ("
+                +TableLoanTransactions.DEPOSIT_AMOUNT+") AS loanstotal, "
+                +TableLoanTransactions.DEPOSIT_CENTER_ID+""
+                +" FROM " + TableLoanTransactions.TABLE_NAME+"  GROUP BY "+TableLoanTransactions.DEPOSIT_CENTER_ID; // WHERE "+TableLoanTransactions.DEPOSIT_CENTER_ID+" =?
+        Cursor cursor = db.rawQuery(countQuery, null ); //new String[]{""}
+        if(cursor.moveToFirst()){
+            do {
+                center = new CenterItem();
+                center.no_of_loans = cursor.getInt(0);
+                center.total_collection = cursor.getDouble(1);
+                center.id = cursor.getString(2);
+                center.name = getCenterNameforId(center.id);
+                center.pending_sync_count = getPendingSyncCount(center.id);
+                centers.add(center);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        db = null;
+        return centers;
+    }
+
+
     public RecievedLoan getDetailsforLoanID(String loanid){
         RecievedLoan loan =null;
         db = this.getReadableDatabase();
@@ -365,6 +422,16 @@ public class DBOperations  extends SQLiteOpenHelper {
         return loan;
     }
 
+    public void updateLoanForPaymentLoan(String loanid){
+        ContentValues values = new ContentValues();
+        db.beginTransaction();
+        values.put(TableRecievedLoans.MARKED_PAYMENT, Constants.SYCED_YES);
+        db.update(TableRecievedLoans.TABLE_NAME, values, TableRecievedLoans.LOAN_ID + " = ?",
+                new String[]{loanid});
+        db.setTransactionSuccessful();
+        db.endTransaction();
+    }
+
     public void updateLoanForAttedance(String groupdid){
         ContentValues values = new ContentValues();
         db.beginTransaction();
@@ -373,6 +440,47 @@ public class DBOperations  extends SQLiteOpenHelper {
                 new String[]{groupdid});
         db.setTransactionSuccessful();
         db.endTransaction();
+    }
+
+    public void updateLoanForGroupPayment(String groupdid){
+        ContentValues values = new ContentValues();
+        db.beginTransaction();
+        values.put(TableRecievedLoans.MARKED_PAYMENT, Constants.SYCED_YES);
+        db.update(TableRecievedLoans.TABLE_NAME, values, TableRecievedLoans.LOAN_GROUP_ID + " = ?",
+                new String[]{groupdid});
+        db.setTransactionSuccessful();
+        db.endTransaction();
+    }
+
+    public void saveGroupPaymennts(GroupPaymentItem payment) {
+        db = this.getWritableDatabase();
+        db.beginTransaction();
+        ContentValues values;
+        ClientItem item;
+        ArrayList<ClientItem> clients = payment.clients;
+        for (int i = 0; i < clients.size(); i++) {
+            values = new ContentValues();
+            item = clients.get(i);
+            values.put(TableLoanTransactions.DEPOSIT_CLIENT_ID, item.id);
+            values.put(TableLoanTransactions.DEPOSIT_CENTER_ID, payment.center_id);
+            values.put(TableLoanTransactions.DEPOSIT_GROUP_ID, payment.group_id);
+            values.put(TableLoanTransactions.DEPOSIT_LOAN_ID, item.loanid);
+            values.put(TableLoanTransactions.DEPOSIT_AMOUNT, Double.parseDouble(item.def));
+            values.put(TableLoanTransactions.DEPOSIT_CHEQUE_NUMBER, "");
+            values.put(TableLoanTransactions.DEPOSIT_BANK_NUMBER, "");
+            values.put(TableLoanTransactions.DEPOSIT_PAY_DEFAULT,0.00);
+            values.put(TableLoanTransactions.DEPOSIT_TIME, payment.pay_date);
+            values.put(TableLoanTransactions.DEPOSIT_NOTE, "");
+            values.put(TableLoanTransactions.DEPOSIT_PAY_TYPE, Constants.PAYMENT_TYPE_ID_CASH);
+            db.insert(TableLoanTransactions.TABLE_NAME, null, values);
+        }
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        if (clients.size() > 0)
+            updateLoanForGroupPayment(payment.group_id);
+        db.close();
+        db = null;
     }
 
     public void saveMarkedAttendance(MarkedAttendace markedattendance){
@@ -462,6 +570,7 @@ public class DBOperations  extends SQLiteOpenHelper {
     public void deleteAttendanceForGroupId(String groupid){
         db = this.getWritableDatabase();
         db.beginTransaction();
+
         db.delete(TableAttendanceTransactions.TABLE_NAME, TableAttendanceTransactions.ATTENDANCE_GROUP_ID + " = ?",
                 new String[] { groupid });
         db.endTransaction();
@@ -477,16 +586,17 @@ public class DBOperations  extends SQLiteOpenHelper {
         values.put(TableLoanTransactions.DEPOSIT_CENTER_ID,item.center_id);
         values.put(TableLoanTransactions.DEPOSIT_GROUP_ID,item.group_id);
         values.put(TableLoanTransactions.DEPOSIT_LOAN_ID,item.loan_id);
-        values.put(TableLoanTransactions.DEPOSIT_AMOUNT,item.amount);
+        values.put(TableLoanTransactions.DEPOSIT_AMOUNT,Double.parseDouble(item.amount));
         values.put(TableLoanTransactions.DEPOSIT_CHEQUE_NUMBER,item.checque_no);
         values.put(TableLoanTransactions.DEPOSIT_BANK_NUMBER,item.bank_no);
-        values.put(TableLoanTransactions.DEPOSIT_PAY_DEFAULT,"");
+        values.put(TableLoanTransactions.DEPOSIT_PAY_DEFAULT,0.00);
         values.put(TableLoanTransactions.DEPOSIT_TIME,item.transaction_date);
         values.put(TableLoanTransactions.DEPOSIT_NOTE,item.note);
         values.put(TableLoanTransactions.DEPOSIT_PAY_TYPE,item.payment_type_id);
         db.insert(TableLoanTransactions.TABLE_NAME,null,values);
         db.setTransactionSuccessful();
         db.endTransaction();
+        updateLoanForPaymentLoan(item.loan_id);
         db.close();
         db = null;
     }

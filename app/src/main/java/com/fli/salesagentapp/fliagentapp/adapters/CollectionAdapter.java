@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.fli.salesagentapp.fliagentapp.R;
+import com.fli.salesagentapp.fliagentapp.data.CenterItem;
 import com.fli.salesagentapp.fliagentapp.data.CollectionItem;
 
 import java.util.ArrayList;
@@ -18,11 +19,12 @@ import java.util.ArrayList;
 
 public class CollectionAdapter extends ArrayAdapter {
 
-    private final ArrayList<CollectionItem> items ;
+ //   private final ArrayList<CollectionItem> items ;
+    private final ArrayList<CenterItem> items ;
     private final LayoutInflater mInflater;
     private final Context context;
 
-    public CollectionAdapter(Context context,ArrayList<CollectionItem> items) {
+    public CollectionAdapter(Context context,ArrayList<CenterItem> items) {
         super(context, R.layout.layout_collection_item,items);
         this.items = items;
         this.mInflater = LayoutInflater.from(context);
@@ -46,11 +48,17 @@ public class CollectionAdapter extends ArrayAdapter {
         total_collection = (TextView) v.getTag(R.id.total_collection);
         pending_sync = (TextView) v.getTag(R.id.pending_sync);
 
-        CollectionItem item = items.get(position);
-        center_name.setText(item.center_name);
-        no_of_loans.setText(item.no_of_loans);
-        total_collection.setText(item.total_collection);
-        pending_sync.setText(item.pending_sync);
+//        CollectionItem item = items.get(position);
+//        center_name.setText(item.center_name);
+//        no_of_loans.setText(item.no_of_loans);
+//        total_collection.setText(item.total_collection);
+//        pending_sync.setText(item.pending_sync);
+
+        CenterItem item = items.get(position);
+        center_name.setText(item.name);
+        no_of_loans.setText(String.valueOf(item.no_of_loans));
+        total_collection.setText(String.valueOf(item.total_collection));
+        pending_sync.setText(String.valueOf(item.pending_sync_count));
 
         return v;
     }

@@ -20,9 +20,9 @@ public class CollectionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collections);
         list_collections = (ListView)findViewById(R.id.list_collections);
-        collections = initItems();
-        c_adapter =new CollectionAdapter(getApplicationContext(),collections);
-        list_collections.setAdapter(c_adapter);
+//        collections = initItems();
+//        c_adapter =new CollectionAdapter(getApplicationContext(),collections);
+//        list_collections.setAdapter(c_adapter);
 
     }
 

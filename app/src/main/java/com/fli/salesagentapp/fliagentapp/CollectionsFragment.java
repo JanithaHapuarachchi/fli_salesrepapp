@@ -2,6 +2,7 @@ package com.fli.salesagentapp.fliagentapp;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,7 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.fli.salesagentapp.fliagentapp.adapters.CollectionAdapter;
+import com.fli.salesagentapp.fliagentapp.data.CenterItem;
 import com.fli.salesagentapp.fliagentapp.data.CollectionItem;
+import com.fli.salesagentapp.fliagentapp.utils.DataManager;
+import com.fli.salesagentapp.fliagentapp.utils.ProgressBarController;
+import com.fli.salesagentapp.fliagentapp.utils.Utility;
 
 import java.util.ArrayList;
 
@@ -28,6 +33,9 @@ public class CollectionsFragment extends Fragment {
     ListView list_collections;
     CollectionAdapter c_adapter;
     ArrayList<CollectionItem> collections;
+    ArrayList<CenterItem> centers;
+    DataManager dmManager;
+    ProgressBarController prgController;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -76,10 +84,12 @@ public class CollectionsFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_collections, container, false);
 
         list_collections = (ListView)view.findViewById(R.id.list_collections);
-        collections = initItems();
-        c_adapter =new CollectionAdapter(getContext(),collections);
-        list_collections.setAdapter(c_adapter);
 
+        dmManager = new DataManager(getContext());
+        prgController = new ProgressBarController(getActivity());
+
+
+        new LoadCollectionSheet().execute();
         return view;
     }
 
@@ -134,5 +144,35 @@ public class CollectionsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    class LoadCollectionSheet extends AsyncTask <Void,Void,Void>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            prgController.showProgressBar("Loading Data...");
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            prgController.hideProgressBar();
+
+           // collections = initItems();
+            if(centers.size()>0) {
+                c_adapter = new CollectionAdapter(getContext(), centers);
+                list_collections.setAdapter(c_adapter);
+            }
+            else{
+                Utility.showMessage("No Collection Data",getContext());
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            centers = dmManager.getCollectionSheet();
+            return null;
+        }
     }
 }

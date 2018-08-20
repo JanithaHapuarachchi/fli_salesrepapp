@@ -100,6 +100,7 @@ public class IssuePaymentAdapter extends BaseAdapter {
             holder.txt_name=  (TextView)v.findViewById(R.id.txt_name);//(R.id.txt_name, v.findViewById(R.id.txt_name));
             holder.txt_payment =  (EditText) v.findViewById(R.id.txt_payment); //(R.id.txt_payment, v.findViewById(R.id.txt_payment));
             holder.txt_payment_due =  (TextView)v.findViewById(R.id.txt_payment_due); //(R.id.txt_payment_due, v.findViewById(R.id.txt_payment_due));
+            //holder.txt_payment.setTag(position);
             v.setTag(holder);
         }
 
@@ -215,6 +216,9 @@ public class IssuePaymentAdapter extends BaseAdapter {
         return v;
     }
 
+    public ArrayList<ClientItem> getPaymentDetails(){
+        return clientItems;
+    }
 
     public void calculate_total(){
         int tot =0;

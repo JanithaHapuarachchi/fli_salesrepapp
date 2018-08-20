@@ -25,13 +25,17 @@ import com.fli.salesagentapp.fliagentapp.data.CenterItem;
 import com.fli.salesagentapp.fliagentapp.data.ClientItem;
 import com.fli.salesagentapp.fliagentapp.data.ClientPaymentsInfo;
 import com.fli.salesagentapp.fliagentapp.data.GroupItem;
+import com.fli.salesagentapp.fliagentapp.data.GroupPaymentItem;
 import com.fli.salesagentapp.fliagentapp.data.PayeeItem;
 import com.fli.salesagentapp.fliagentapp.services.SubmitDataService;
+import com.fli.salesagentapp.fliagentapp.utils.Constants;
 import com.fli.salesagentapp.fliagentapp.utils.DataManager;
 import com.fli.salesagentapp.fliagentapp.utils.ProgressBarController;
 import com.fli.salesagentapp.fliagentapp.utils.Utility;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 
@@ -64,7 +68,9 @@ public class PaymentsFragment extends Fragment {
     ClientPaymentsInfo info;
     DataManager dmManager;
     ProgressBarController prgController;
-
+    IssuePaymentAdapter issuePaymentAdapter;
+    ArrayList<ClientItem> payed_clients;
+    String str_today;
     boolean init_centers =false;
     boolean init_groups =false;
 
@@ -127,6 +133,8 @@ public class PaymentsFragment extends Fragment {
         prgController  =new ProgressBarController(getActivity());
 
         //initItems();
+        SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
+        str_today = df.format(Calendar.getInstance().getTime());
         SubmitDataService.stopAsync();
         new LoadClientPaymentInfo().execute();
 //        Log.e("SIZE ",""+centers.size());
@@ -149,6 +157,22 @@ public class PaymentsFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
               //  search_center_name(s.toString());
+            }
+        });
+
+        btn_pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(selected_center == null || selected_group == null){
+                    Utility.showMessage("Please Select center and group",getContext());
+                }
+                else if(selected_group.clients.size()==0){
+                    Utility.showMessage("There are no Clients",getContext());
+                }
+                else{
+                    SubmitDataService.stopAsync();
+                    new SaveClientPayments().execute();
+                }
             }
         });
 
@@ -244,7 +268,7 @@ public class PaymentsFragment extends Fragment {
         selected_group =groups.get(group_index);
       //  IssuePaymentAdapter issuePaymentAdapter = new IssuePaymentAdapter(getContext(),selected_group.payees,pay_total);
       //  center_payees.setAdapter(issuePaymentAdapter);
-        IssuePaymentAdapter issuePaymentAdapter = new IssuePaymentAdapter(getContext(),groupClients.get(selected_group.id),pay_total);
+         issuePaymentAdapter = new IssuePaymentAdapter(getContext(),groupClients.get(selected_group.id),pay_total);
         center_payees.setAdapter(issuePaymentAdapter);
 
     }
@@ -406,8 +430,47 @@ public class PaymentsFragment extends Fragment {
             Log.e("FLI CENTER GROUPS",centerGroups.toString());
             Log.e("FLI GROUPS",allgroups.toString());
             Log.e("FLI GROUP CLIENTS",groupClients.toString());
+        }
+    }
 
+    private void removeGroupFromLists(){
+        groups =  centerGroups.get(selected_center.id);
+        int pos_selectedgroup = groups.indexOf(selected_group);
+        groups.remove(pos_selectedgroup);
+        centerGroups.put(selected_center.id,groups);
+        if(groups.size()==0){
+            int pos_selectedcenter = initialCenters.indexOf(selected_center);
+            centerGroups.remove(selected_center.id);
+            centers.remove(pos_selectedcenter);
+            initialCenters.remove(pos_selectedcenter);
+        }
+        spinner_center_names.setAdapter(new PaymentLoadCentersAdapter(getContext(),centers));
+    }
 
+    class SaveClientPayments extends AsyncTask<Void,Void,Void>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            prgController.showProgressBar("Saving Data...");
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            prgController.hideProgressBar();
+            removeGroupFromLists();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            payed_clients = issuePaymentAdapter.getPaymentDetails();
+            GroupPaymentItem payment = new GroupPaymentItem();
+            payment.center_id =selected_center.id;
+            payment.group_id =selected_group.id;
+            payment.clients = payed_clients;
+            payment.pay_date = str_today;
+            dmManager.saveGroupPaymennts(payment);
+            return null;
         }
     }
 

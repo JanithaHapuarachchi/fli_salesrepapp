@@ -2,8 +2,10 @@ package com.fli.salesagentapp.fliagentapp.utils;
 
 import android.content.Context;
 
+import com.fli.salesagentapp.fliagentapp.data.CenterItem;
 import com.fli.salesagentapp.fliagentapp.data.ClientAttendanceInfo;
 import com.fli.salesagentapp.fliagentapp.data.ClientPaymentsInfo;
+import com.fli.salesagentapp.fliagentapp.data.GroupPaymentItem;
 import com.fli.salesagentapp.fliagentapp.data.MarkedAttendace;
 import com.fli.salesagentapp.fliagentapp.data.PayeeItem;
 import com.fli.salesagentapp.fliagentapp.data.RecievedLoan;
@@ -48,4 +50,8 @@ public class DataManager {
     public void savePayment(PayeeItem item){
         new DBOperations(context).savePayment(item);
     }
+
+    public void saveGroupPaymennts(GroupPaymentItem payment) { new DBOperations(context).saveGroupPaymennts(payment);}
+
+    public ArrayList<CenterItem> getCollectionSheet(){ return new DBOperations(context).getCollectionSheet();}
 }

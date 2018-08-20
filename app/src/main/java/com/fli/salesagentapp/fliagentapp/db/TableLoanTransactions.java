@@ -36,8 +36,8 @@ public class TableLoanTransactions {
             + DEPOSIT_PAY_TYPE + " char(40) NULL,"
             + DEPOSIT_CHEQUE_NUMBER + " char(40)  NULL,"
             + DEPOSIT_BANK_NUMBER + " char(40) NULL,"
-            + DEPOSIT_PAY_DEFAULT + " char(40) NULL,"
-            + DEPOSIT_AMOUNT + " char(40)  NULL,"
+            + DEPOSIT_PAY_DEFAULT + " double NULL,"
+            + DEPOSIT_AMOUNT + " double  NULL,"
             + DEPOSIT_NOTE + " char(40)  NULL,"
             + DEPOSIT_SYNCED + " char(1) default '"+ Constants.SYCED_NOT+"',"
             + DEPOSIT_TIME + " TEXT  NULL );";
