@@ -61,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@drawable/rounded_green_button"
+            android:background="@drawable/rounded_yellow_button"
             android:padding="10dp"
             android:text="Mark Attendance"
             android:textColor="@color/app_background" />

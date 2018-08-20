@@ -19,30 +19,29 @@
             android:orientation="vertical">
 
             <TextView
-                android:textColor="@color/app_text_color"
-                android:textAllCaps="true"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:textSize="20dp"
-                android:textAlignment="center"
-                android:text="FLI Agent App"
                 android:layout_marginBottom="5dp"
-                android:textStyle="bold"
-                />
+                android:text="FLI Agent App"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/txt_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="15dp"
                 android:background="@drawable/rounded_corneres_text"
+                android:gravity="center_horizontal"
                 android:hint="Username"
-                android:paddingBottom="5dp"
-                android:paddingLeft="20dp"
-                android:paddingTop="5dp"
-                android:textColor="@color/app_text_color"
-                android:textColorHint="@color/app_text_color"
-                android:textSize="20dp" />
+                android:padding="5dp"
+                android:text="maleethad"
+                android:textColor="@color/app_textbox_text_color"
+                android:textColorHint="@color/app_textbox_hint_color"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/txt_password"
@@ -50,21 +49,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/rounded_corneres_text"
+                android:gravity="center_horizontal"
                 android:hint="Password"
                 android:inputType="textPassword"
-                android:paddingBottom="5dp"
-                android:paddingLeft="20dp"
-                android:paddingTop="5dp"
-                android:textColor="@color/app_text_color"
-                android:textColorHint="@color/app_text_color"
-                android:textSize="20dp" />
+                android:padding="5dp"
+                android:text="123"
+                android:textColor="@color/app_textbox_text_color"
+                android:textColorHint="@color/app_textbox_hint_color"
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/btn_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@color/green"
+                android:background="@drawable/rounded_corners_enter_button"
                 android:text="Login"
                 android:textAlignment="center"
                 android:textColor="@color/white"

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/app_text_background"/>
-    <!--<stroke android:width="3dp" android:color="@color/app_background_shaded" />-->
+    <solid android:color="@color/yellow_button"/>
     <corners android:radius="30dp"/>
     <padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp" />
 </shape>

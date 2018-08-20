@@ -39,7 +39,7 @@
             android:clickable="true"
             android:padding="5dp"
             android:textColor="@color/app_text_color"
-            android:background="@drawable/rounded_border_green"
+            android:background="@drawable/rounded_border_white"
             android:layout_weight="0.8"
             android:textAlignment="center"
             />
@@ -49,7 +49,7 @@
             android:layout_marginRight="5dp"
             android:clickable="true"
             android:focusable="false"
-            android:background="@drawable/rounded_border_green"
+            android:background="@drawable/rounded_border_white"
             android:id="@+id/txt_today_attendace"
             android:padding="5dp"
             android:paddingLeft="10dp"

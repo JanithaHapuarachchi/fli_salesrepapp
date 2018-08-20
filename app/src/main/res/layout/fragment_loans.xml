@@ -46,8 +46,8 @@
                         android:background="@drawable/round_border_min_edge_textbox"
                         android:hint="Loan Account No."
                         android:padding="10dp"
-                        android:textColor="@color/app_text_color"
-                        android:textColorHint="@color/app_text_color"
+                        android:textColor="@color/app_textbox_text_color"
+                        android:textColorHint="@color/app_textbox_hint_color"
                         android:textSize="15dp" />
 
                     <Button
@@ -57,9 +57,9 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/rounded_border_green"
+                        android:background="@drawable/rounded_border_white"
                         android:text="Details"
-                        android:textColor="#00b3a1"
+                        android:textColor="@color/app_text_color"
                         android:textSize="15dp" />
 
                 </LinearLayout>
@@ -359,7 +359,8 @@
                         android:inputType="number"
                         android:padding="5dp"
                         android:paddingLeft="15dp"
-                        android:textColor="@color/app_text_color"
+                        android:textColor="@color/app_textbox_text_color"
+                        android:textColorHint="@color/app_textbox_hint_color"
                         android:textSize="15dp" />
 
                     <View
@@ -422,7 +423,8 @@
                         android:inputType="number"
                         android:padding="5dp"
                         android:paddingLeft="15dp"
-                        android:textColor="@color/app_text_color"
+                        android:textColor="@color/app_textbox_text_color"
+                        android:textColorHint="@color/app_textbox_hint_color"
                         android:textSize="15dp" />
 
                     <View
@@ -462,7 +464,8 @@
                             android:inputType="number"
                             android:padding="5dp"
                             android:paddingLeft="15dp"
-                            android:textColor="@color/app_text_color"
+                            android:textColor="@color/app_textbox_text_color"
+                            android:textColorHint="@color/app_textbox_hint_color"
                             android:textSize="15dp" />
 
                         <View
@@ -496,7 +499,8 @@
                             android:inputType="number"
                             android:padding="5dp"
                             android:paddingLeft="15dp"
-                            android:textColor="@color/app_text_color"
+                            android:textColor="@color/app_textbox_text_color"
+                            android:textColorHint="@color/app_textbox_hint_color"
                             android:textSize="15dp" />
 
                         <View
@@ -529,7 +533,8 @@
                             android:focusable="false"
                             android:padding="5dp"
                             android:paddingLeft="15dp"
-                            android:textColor="@color/app_text_color"
+                            android:textColor="@color/app_textbox_text_color"
+                            android:textColorHint="@color/app_textbox_hint_color"
                             android:textSize="15dp" />
 
                         <View
@@ -549,9 +554,9 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/rounded_green_button"
+                    android:background="@drawable/rounded_yellow_button"
                     android:text="Pay"
-                    android:textColor="@color/app_background" />
+                    android:textColor="@color/app_text_color" />
 
             </LinearLayout>
 
