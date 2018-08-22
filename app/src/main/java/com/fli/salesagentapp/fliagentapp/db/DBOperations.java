@@ -45,8 +45,8 @@ public class DBOperations  extends SQLiteOpenHelper {
         TableAttendanceTransactions.onCreate(db);
         TableLoanTransactions.onCreate(db);
         TableRecievedLoans.onCreate(db);
-        db.close();
-        db = null;
+      //  db.close();
+      //  db = null;
     }
 
     public ClientAttendanceInfo getAvailableAttendance(){
@@ -74,8 +74,8 @@ public class DBOperations  extends SQLiteOpenHelper {
             groupclients.put(groupItem.id,client_set);
         }
        // db.endTransaction();
-        db.close();
-        db = null;
+       // db.close();
+      //  db = null;
 
         info.centers = centers;
         info.centergroups =centergroups;
@@ -109,8 +109,8 @@ public class DBOperations  extends SQLiteOpenHelper {
             groupclients.put(groupItem.id,client_set);
         }
         //db.endTransaction();
-        db.close();
-        db = null;
+       // db.close();
+        //db = null;
 
         info.centers = centers;
         info.centergroups =centergroups;
@@ -309,8 +309,8 @@ public class DBOperations  extends SQLiteOpenHelper {
         }
         cursor.close();
         //db.endTransaction();
-        db.close();
-        db = null;
+      //  db.close();
+      //  db = null;
         if(loan != null)
             Log.e("FLI LOAN",loan.toString());
         return loan;
@@ -363,8 +363,8 @@ public class DBOperations  extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
-        db = null;
+       // db.close();
+      //  db = null;
         return centers;
     }
 
@@ -412,8 +412,8 @@ public class DBOperations  extends SQLiteOpenHelper {
             Log.e("FLI CURSOR EXT ID",loan.loan_externalid);
         }
         cursor.close();
-        db.close();
-        db = null;
+       // db.close();
+       // db = null;
         if(loan != null)
         Log.e("FLI LOAN",loan.toString());
         return loan;
@@ -428,8 +428,8 @@ public class DBOperations  extends SQLiteOpenHelper {
                 new String[]{loanid});
         db.setTransactionSuccessful();
         db.endTransaction();
-        db.close();
-        db =null;
+//        db.close();
+//        db =null;
     }
 
     public void updateLoanForAttedance(String groupdid){
@@ -479,8 +479,8 @@ public class DBOperations  extends SQLiteOpenHelper {
         db.endTransaction();
         if (clients.size() > 0)
             updateLoanForGroupPayment(payment.group_id);
-        db.close();
-        db = null;
+        //db.close();
+        //db = null;
     }
 
     public void saveMarkedAttendance(MarkedAttendace markedattendance){
@@ -510,8 +510,8 @@ public class DBOperations  extends SQLiteOpenHelper {
         db.setTransactionSuccessful();
         db.endTransaction();
         updateLoanForAttedance(markedattendance.group_id);
-        db.close();
-        db = null;
+       // db.close();
+       // db = null;
     }
 
     public void saveRecievedLoans(ArrayList<RecievedLoan> recievedloans){
@@ -544,8 +544,8 @@ public class DBOperations  extends SQLiteOpenHelper {
         }
         db.setTransactionSuccessful();
         db.endTransaction();
-        db.close();
-        db = null;
+      //  db.close();
+     //   db = null;
     }
 
     public ArrayList<PayeeItem> getPayedLoans(){
@@ -588,8 +588,8 @@ public class DBOperations  extends SQLiteOpenHelper {
         }
         cursor.close();
         // db.endTransaction();
-        db.close();
-        db = null;
+      //  db.close();
+       // db = null;
 
         return payedloans;
     }
@@ -607,8 +607,8 @@ public class DBOperations  extends SQLiteOpenHelper {
                 mattendance.clients = getAttendaceMarkedClientsForGroup(mattendance.group_id);
             }
            // db.endTransaction();
-            db.close();
-            db = null;
+           // db.close();
+          //  db = null;
        // }
         return  markedAttendaces;
     }
@@ -620,8 +620,8 @@ public class DBOperations  extends SQLiteOpenHelper {
         db.delete(TableAttendanceTransactions.TABLE_NAME, TableAttendanceTransactions.ATTENDANCE_GROUP_ID + " = ?",
                 new String[] { groupid });
         db.endTransaction();
-        db.close();
-        db = null;
+       // db.close();
+      //  db = null;
     }
 
     public void updateSyncedPayment(String loanid){
@@ -632,7 +632,7 @@ public class DBOperations  extends SQLiteOpenHelper {
                 new String[]{loanid});
         db.setTransactionSuccessful();
         db.endTransaction();
-        db = null;
+      //  db = null;
     }
 
     public void savePayment(PayeeItem item){
@@ -654,8 +654,8 @@ public class DBOperations  extends SQLiteOpenHelper {
         db.setTransactionSuccessful();
         db.endTransaction();
         updateLoanForPaymentLoan(item.loan_id);
-        db.close();
-        db = null;
+       // db.close();
+        //db = null;
     }
 
     @Override

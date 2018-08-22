@@ -161,7 +161,8 @@ public class WSCalls {
             try {
             res= recieved.getJSONObject(i);
             loan = new RecievedLoan();
-            loan.loan_id = res.getString("id");
+           Log.e("FLI Res ",res.toString());
+            loan.loan_id = String.valueOf(res.getLong("id"));
             loan.loan_name = res.getString("loanProductName");
             loan.loan_accountno =  res.getString("accountNo");
             loan.loan_externalid = res.getString("externalId");
