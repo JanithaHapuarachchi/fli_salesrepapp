@@ -76,6 +76,7 @@ public class SubmitDataService extends Service {
             if (Utility.isConnected(SubmitDataService.this)) {
                 try {
                     wsCalls.sync_MarkedAttendance();
+                    wsCalls.sync_PayedLoans();
                 } catch (Exception e) {
                     Log.e("SFA Major", e.toString());
                 }

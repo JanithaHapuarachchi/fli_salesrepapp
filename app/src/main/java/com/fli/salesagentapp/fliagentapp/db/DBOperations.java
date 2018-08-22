@@ -289,7 +289,6 @@ public class DBOperations  extends SQLiteOpenHelper {
         return attendaces;
     }
 
-
     public RecievedLoan getSavedAttendace(){
         RecievedLoan loan =null;
         db = this.getReadableDatabase();
@@ -316,7 +315,6 @@ public class DBOperations  extends SQLiteOpenHelper {
             Log.e("FLI LOAN",loan.toString());
         return loan;
     }
-
 
     public String getCenterNameforId(String center_id){
         String center_name = "";
@@ -369,7 +367,6 @@ public class DBOperations  extends SQLiteOpenHelper {
         db = null;
         return centers;
     }
-
 
     public RecievedLoan getDetailsforLoanID(String loanid){
         RecievedLoan loan =null;
@@ -548,6 +545,52 @@ public class DBOperations  extends SQLiteOpenHelper {
         db = null;
     }
 
+    public ArrayList<PayeeItem> getPayedLoans(){
+        ArrayList<PayeeItem> payedloans = new ArrayList<PayeeItem>();
+        PayeeItem loan;
+
+        db = this.getReadableDatabase();
+        String countQuery;
+        countQuery = "SELECT "
+                + TableLoanTransactions.DEPOSIT_CLIENT_ID + ","
+                + TableLoanTransactions.DEPOSIT_LOAN_ID+ ","
+                + TableLoanTransactions.DEPOSIT_CENTER_ID+","
+                + TableLoanTransactions.DEPOSIT_PAY_TYPE + ","
+                + TableLoanTransactions.DEPOSIT_CHEQUE_NUMBER+ ","
+                + TableLoanTransactions.DEPOSIT_BANK_NUMBER+","
+              //  + TableLoanTransactions.DEPOSIT_PAY_DEFAULT+","
+                + TableLoanTransactions.DEPOSIT_AMOUNT + ","
+                + TableLoanTransactions.DEPOSIT_NOTE+ ","
+                + TableLoanTransactions.DEPOSIT_TIME
+                + " FROM " + TableLoanTransactions.TABLE_NAME+" WHERE "+TableLoanTransactions.DEPOSIT_SYNCED+" =?";
+        Cursor cursor = db.rawQuery(countQuery,new String[]{Constants.SYCED_NOT});
+        //Cursor cursor =  db.query(TableRecievedLoans.TABLE_NAME,new String[]{TableRecievedLoans.LOAN_CENTER_ID,TableRecievedLoans.LOAN_CENTER_NAME}, null,null,null,null,null,null);
+        Log.e("FLI CUR COUNT",""+cursor.getCount());
+        //  cursor.moveToFirst();
+        if(cursor.moveToFirst()){
+            Log.e("FLI CUR",""+cursor.getString(0));
+            do {
+                loan = new PayeeItem();
+                loan.client_id = cursor.getString(0);
+                loan.loan_id = cursor.getString(1);
+                loan.center_id  =cursor.getString(2);
+                loan.payment_type_id = cursor.getString(3);
+                loan.checque_no = cursor.getString(4);
+                loan.bank_no  =cursor.getString(5);
+                loan.amount = String.valueOf(cursor.getDouble(6));
+                loan.note  =cursor.getString(7);
+                loan.transaction_date  =cursor.getString(8);
+                payedloans.add(loan);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        // db.endTransaction();
+        db.close();
+        db = null;
+
+        return payedloans;
+    }
+
     public ArrayList<MarkedAttendace>getMarkedAttendance(){
         ArrayList<MarkedAttendace> markedAttendaces = new ArrayList<MarkedAttendace>();
         MarkedAttendace mattendance;
@@ -575,6 +618,17 @@ public class DBOperations  extends SQLiteOpenHelper {
                 new String[] { groupid });
         db.endTransaction();
         db.close();
+        db = null;
+    }
+
+    public void updateSyncedPayment(String loanid){
+        ContentValues values = new ContentValues();
+        db.beginTransaction();
+        values.put(TableLoanTransactions.DEPOSIT_SYNCED, Constants.SYCED_YES);
+        db.update(TableLoanTransactions.TABLE_NAME, values, TableLoanTransactions.DEPOSIT_LOAN_ID + " = ?",
+                new String[]{loanid});
+        db.setTransactionSuccessful();
+        db.endTransaction();
         db = null;
     }
 

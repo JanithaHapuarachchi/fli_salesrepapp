@@ -44,8 +44,16 @@ public class DataManager {
         return new DBOperations(context).getMarkedAttendance();
     }
 
+    public ArrayList<PayeeItem> getPayedLoans(){
+        return new DBOperations(context).getPayedLoans();
+    }
+
     public void deleteAttendanceForGroupId(String groupid){
          new DBOperations(context).deleteAttendanceForGroupId(groupid);
+    }
+
+    public void updateSyncedPayment(String loanid){
+        new DBOperations(context).updateSyncedPayment(loanid);
     }
     public void savePayment(PayeeItem item){
         new DBOperations(context).savePayment(item);

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.fli.salesagentapp.fliagentapp.data.ClientItem;
 import com.fli.salesagentapp.fliagentapp.data.MarkedAttendace;
+import com.fli.salesagentapp.fliagentapp.data.PayeeItem;
 import com.fli.salesagentapp.fliagentapp.data.RecievedLoan;
 import com.fli.salesagentapp.fliagentapp.data.ResObject;
 import com.fli.salesagentapp.fliagentapp.db.DBOperations;
@@ -236,6 +237,48 @@ public class WSCalls {
                 else{
                     //res_object.validity = Constants.VALIDITY_FAILED;
                    // res_object.msg = Constants.NETWORK_NOT_FOUND;
+                }
+
+            } catch (Exception e) {
+                Log.e("FLI E AUTH",e.getMessage());
+                //res_object.validity = Constants.VALIDITY_FAILED;
+                //res_object.msg = "Login Failed";
+                // res_object.msg = e.getMessage();
+            }
+
+        }
+    }
+
+    public void sync_PayedLoans(){
+        String response,request;
+        JSONObject jRequest,jResponse;
+        ArrayList<PayeeItem> payedLoans = dtManager.getPayedLoans();
+        PayeeItem loan;
+        for(int i=0; i<payedLoans.size();i++){
+            loan =payedLoans.get(i);
+
+            request  =  Constants.LOANS_URL+loan.loan_id+Constants.TRANSACTIONS_URL;
+            try {
+                jRequest = new JSONObject();
+                Log.e("FLI SYNC GROUP",loan.loan_id);
+                jRequest.put("dateFormat",Constants.DATE_FORMAT);
+                jRequest.put("transactionDate",loan.transaction_date);
+                jRequest.put("transactionAmount",loan.amount);
+                jRequest.put("paymentTypeId",loan.payment_type_id);
+                jRequest.put("note",loan.note);
+                if(loan.payment_type_id.equals(Constants.PAYMENT_TYPE_ID_CHEQUE)){
+                    jRequest.put("transactionAmount",loan.bank_no);
+                    jRequest.put("paymentTypeId",loan.checque_no);
+                }
+                jRequest.put("locale","en");
+                if(Utility.isConnected(context)) {
+                    response = RequestHandler.sendServicePost(jRequest, request, context);
+                    Log.e("FLI SYNC RES",response);
+                    jResponse = new JSONObject(response);
+                    if(Utility.isJSONKeyAvailable(jResponse,"resourceId")){
+                        dtManager.updateSyncedPayment(loan.loan_id);
+                    }
+
                 }
 
             } catch (Exception e) {
