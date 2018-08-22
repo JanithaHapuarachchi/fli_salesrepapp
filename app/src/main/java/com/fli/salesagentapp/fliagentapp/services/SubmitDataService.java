@@ -83,6 +83,7 @@ public class SubmitDataService extends Service {
                     wsCalls.sync_MarkedAttendance();
                     wsCalls.sync_PayedLoans();
                 } catch (Exception e) {
+                    e.getStackTrace();
                     Log.e("FLI Major", e.toString());
                 }
             }

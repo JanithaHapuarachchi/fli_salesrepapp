@@ -22,7 +22,7 @@ public class Constants {
     public static final String LOANS_URL = "loans";
     public static final String ACTIVE_LOANS_URL = " and (l.loan_status_id=300 or l.loan_status_id=602)";
     public static final String ACTIVE_USER_URL = "l.loan_officer_id=";
-    public static final String LOAN_TRANSACTION_URL = "/transactions?command=recoverypayment";
+    public static final String LOAN_TRANSACTION_URL = "/transactions/template?command=repayment";
     public static final String GROUP_URL = "groups/";
     public static final String TRANSACTIONS_URL = "transactions?command=recoverypayment";
     public static final String ATTENDANCE_URL = "meetings";

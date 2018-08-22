@@ -257,7 +257,7 @@ public class WSCalls {
         for(int i=0; i<payedLoans.size();i++){
             loan =payedLoans.get(i);
 
-            request  =  Constants.LOANS_URL+loan.loan_id+Constants.TRANSACTIONS_URL;
+            request  =  Constants.LOANS_URL+"/"+loan.loan_id+Constants.LOAN_TRANSACTION_URL;
             try {
                 jRequest = new JSONObject();
                 Log.e("FLI SYNC GROUP",loan.loan_id);

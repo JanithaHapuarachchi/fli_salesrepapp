@@ -269,7 +269,7 @@ public class DBOperations  extends SQLiteOpenHelper {
                     + TableAttendanceTransactions.ATTENDANCE_GROUP_ID + ","
                     + TableAttendanceTransactions.ATTENDANCE_CENTER_ID+ ","
                     + TableAttendanceTransactions.ATTENDANCE_TIME
-                    + " FROM " + TableAttendanceTransactions.TABLE_NAME;
+                    + " FROM " + TableAttendanceTransactions.TABLE_NAME+ " WHERE "+TableAttendanceTransactions.ATTENDANCE_SYNCED+" = ?";
 
         Cursor cursor = db.rawQuery(countQuery,new String[]{Constants.SYCED_NOT});
         //Cursor cursor =  db.query(TableRecievedLoans.TABLE_NAME,new String[]{TableRecievedLoans.LOAN_CENTER_ID,TableRecievedLoans.LOAN_CENTER_NAME}, null,null,null,null,null,null);
@@ -421,12 +421,15 @@ public class DBOperations  extends SQLiteOpenHelper {
 
     public void updateLoanForPaymentLoan(String loanid){
         ContentValues values = new ContentValues();
+        db = this.getWritableDatabase();
         db.beginTransaction();
         values.put(TableRecievedLoans.MARKED_PAYMENT, Constants.SYCED_YES);
         db.update(TableRecievedLoans.TABLE_NAME, values, TableRecievedLoans.LOAN_ID + " = ?",
                 new String[]{loanid});
         db.setTransactionSuccessful();
         db.endTransaction();
+        db.close();
+        db =null;
     }
 
     public void updateLoanForAttedance(String groupdid){
@@ -562,7 +565,7 @@ public class DBOperations  extends SQLiteOpenHelper {
                 + TableLoanTransactions.DEPOSIT_AMOUNT + ","
                 + TableLoanTransactions.DEPOSIT_NOTE+ ","
                 + TableLoanTransactions.DEPOSIT_TIME
-                + " FROM " + TableLoanTransactions.TABLE_NAME+" WHERE "+TableLoanTransactions.DEPOSIT_SYNCED+"=?";
+                + " FROM " + TableLoanTransactions.TABLE_NAME+" WHERE "+TableLoanTransactions.DEPOSIT_SYNCED+" = ?";
         Cursor cursor = db.rawQuery(countQuery,new String[]{Constants.SYCED_NOT});
         //Cursor cursor =  db.query(TableRecievedLoans.TABLE_NAME,new String[]{TableRecievedLoans.LOAN_CENTER_ID,TableRecievedLoans.LOAN_CENTER_NAME}, null,null,null,null,null,null);
         Log.e("FLI CUR COUNT",""+cursor.getCount());
