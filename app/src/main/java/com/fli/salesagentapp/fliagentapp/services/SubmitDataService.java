@@ -19,6 +19,7 @@ public class SubmitDataService extends Service {
     public static boolean isServiceRunning = false;
     WSCalls wsCalls;
     public static Sync sync;
+    public static  SubmitDataService cuurentService;
     public SubmitDataService() {
     }
 
@@ -32,13 +33,14 @@ public class SubmitDataService extends Service {
     public void onCreate() {
         super.onCreate();
         isServiceRunning =true;
+        cuurentService = this;
         Log.e("FLI Service","Created");
         wsCalls = new WSCalls(getApplicationContext());
         Intent ser = new Intent(SubmitDataService.this, SubmitDataService.class);
         PendingIntent pendingIntent = PendingIntent.getService(SubmitDataService.this, 0, ser, PendingIntent.FLAG_CANCEL_CURRENT);
         AlarmManager alarm = (AlarmManager) SubmitDataService.this.getSystemService(Context.ALARM_SERVICE);
         alarm.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(),
-                2*60* 1000, pendingIntent);
+                1*60* 1000, pendingIntent);
     }
 
     @Override
@@ -54,9 +56,12 @@ public class SubmitDataService extends Service {
         return START_NOT_STICKY;
     }
 
+
+
     public static void stopAsync(){
         if(sync != null)
         sync.cancel(true);
+
     }
 
     @Override
@@ -78,7 +83,7 @@ public class SubmitDataService extends Service {
                     wsCalls.sync_MarkedAttendance();
                     wsCalls.sync_PayedLoans();
                 } catch (Exception e) {
-                    Log.e("SFA Major", e.toString());
+                    Log.e("FLI Major", e.toString());
                 }
             }
             return null;

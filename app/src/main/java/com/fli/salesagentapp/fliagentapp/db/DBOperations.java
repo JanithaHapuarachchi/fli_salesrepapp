@@ -562,7 +562,7 @@ public class DBOperations  extends SQLiteOpenHelper {
                 + TableLoanTransactions.DEPOSIT_AMOUNT + ","
                 + TableLoanTransactions.DEPOSIT_NOTE+ ","
                 + TableLoanTransactions.DEPOSIT_TIME
-                + " FROM " + TableLoanTransactions.TABLE_NAME+" WHERE "+TableLoanTransactions.DEPOSIT_SYNCED+" =?";
+                + " FROM " + TableLoanTransactions.TABLE_NAME+" WHERE "+TableLoanTransactions.DEPOSIT_SYNCED+"=?";
         Cursor cursor = db.rawQuery(countQuery,new String[]{Constants.SYCED_NOT});
         //Cursor cursor =  db.query(TableRecievedLoans.TABLE_NAME,new String[]{TableRecievedLoans.LOAN_CENTER_ID,TableRecievedLoans.LOAN_CENTER_NAME}, null,null,null,null,null,null);
         Log.e("FLI CUR COUNT",""+cursor.getCount());

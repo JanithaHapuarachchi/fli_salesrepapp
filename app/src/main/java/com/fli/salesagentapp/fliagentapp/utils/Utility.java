@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.fli.salesagentapp.fliagentapp.data.CurrentUser;
+import com.fli.salesagentapp.fliagentapp.services.SubmitDataService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -129,12 +130,16 @@ public class Utility {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager
                 .getRunningServices(Integer.MAX_VALUE)) {
-            if ("family.mobitel.cdcsystem.services.MajorSyncProvider".equals(service.service
+            if ("".equals(service.service
                     .getClassName())) {
                 return true;
             }
         }
         return false;
+    }
+
+    public static void stopService(){
+      //  SubmitDataService.stopAsync();
     }
 
 }

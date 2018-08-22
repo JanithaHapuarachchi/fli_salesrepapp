@@ -1,7 +1,5 @@
 package com.fli.salesagentapp.fliagentapp;
 
-import android.content.Context;
-import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,18 +16,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.fli.salesagentapp.fliagentapp.adapters.AttendanceAdapter;
-import com.fli.salesagentapp.fliagentapp.adapters.IssuePaymentAdapter;
 import com.fli.salesagentapp.fliagentapp.adapters.PaymentLoadCentersAdapter;
 import com.fli.salesagentapp.fliagentapp.adapters.PaymentLoadGroupsAdapter;
 import com.fli.salesagentapp.fliagentapp.data.AttendanceItem;
 import com.fli.salesagentapp.fliagentapp.data.CenterItem;
 import com.fli.salesagentapp.fliagentapp.data.ClientAttendanceInfo;
 import com.fli.salesagentapp.fliagentapp.data.ClientItem;
-import com.fli.salesagentapp.fliagentapp.data.ClientPaymentsInfo;
 import com.fli.salesagentapp.fliagentapp.data.GroupItem;
 import com.fli.salesagentapp.fliagentapp.data.MarkedAttendace;
 import com.fli.salesagentapp.fliagentapp.data.PayeeItem;
-import com.fli.salesagentapp.fliagentapp.services.SubmitDataService;
 import com.fli.salesagentapp.fliagentapp.utils.Constants;
 import com.fli.salesagentapp.fliagentapp.utils.DataManager;
 import com.fli.salesagentapp.fliagentapp.utils.ProgressBarController;
@@ -142,7 +137,7 @@ public class AttendanceFragment extends Fragment {
 //        spinner_center_names.setAdapter(pl_center_adapter);
 //        setGroupsforCenter(null);
         center_names.setThreshold(1);
-        SubmitDataService.stopAsync();
+        Utility.stopService();
         new LoadClientAttendanceInfo().execute();
 
         btn_mark_attendance.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +150,7 @@ public class AttendanceFragment extends Fragment {
                     Utility.showMessage("There are no Clients",getContext());
                 }
                 else{
-                    SubmitDataService.stopAsync();
+                    Utility.stopService();
                     new SaveClientAttendants().execute();
                 }
             }

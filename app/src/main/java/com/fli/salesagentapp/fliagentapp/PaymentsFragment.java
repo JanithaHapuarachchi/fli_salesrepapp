@@ -1,6 +1,5 @@
 package com.fli.salesagentapp.fliagentapp;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,7 +26,6 @@ import com.fli.salesagentapp.fliagentapp.data.ClientPaymentsInfo;
 import com.fli.salesagentapp.fliagentapp.data.GroupItem;
 import com.fli.salesagentapp.fliagentapp.data.GroupPaymentItem;
 import com.fli.salesagentapp.fliagentapp.data.PayeeItem;
-import com.fli.salesagentapp.fliagentapp.services.SubmitDataService;
 import com.fli.salesagentapp.fliagentapp.utils.Constants;
 import com.fli.salesagentapp.fliagentapp.utils.DataManager;
 import com.fli.salesagentapp.fliagentapp.utils.ProgressBarController;
@@ -135,7 +133,7 @@ public class PaymentsFragment extends Fragment {
         //initItems();
         SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
         str_today = df.format(Calendar.getInstance().getTime());
-        SubmitDataService.stopAsync();
+        Utility.stopService();
         new LoadClientPaymentInfo().execute();
 //        Log.e("SIZE ",""+centers.size());
         // pl_center_adapter = new PaymentLoadCentersAdapter(getApplicationContext(),centers);
@@ -170,7 +168,7 @@ public class PaymentsFragment extends Fragment {
                     Utility.showMessage("There are no Clients",getContext());
                 }
                 else{
-                    SubmitDataService.stopAsync();
+                    Utility.stopService();
                     new SaveClientPayments().execute();
                 }
             }

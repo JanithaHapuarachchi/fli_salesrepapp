@@ -4,10 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -18,13 +16,11 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.fli.salesagentapp.fliagentapp.data.PayeeItem;
 import com.fli.salesagentapp.fliagentapp.data.RecievedLoan;
-import com.fli.salesagentapp.fliagentapp.services.SubmitDataService;
 import com.fli.salesagentapp.fliagentapp.utils.Constants;
 import com.fli.salesagentapp.fliagentapp.utils.DataManager;
 import com.fli.salesagentapp.fliagentapp.utils.ProgressBarController;
@@ -33,7 +29,6 @@ import com.fli.salesagentapp.fliagentapp.utils.Utility;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 
 /**
@@ -133,7 +128,7 @@ public class LoansFragment extends Fragment {
             public void onClick(View v) {
                 String loanno = txt_loan_no.getText().toString();
                 if(!loanno.equals("")){
-                    SubmitDataService.stopAsync();
+                    Utility.stopService();
                   new LoadLoanData().execute(loanno);
                 }
                 else{

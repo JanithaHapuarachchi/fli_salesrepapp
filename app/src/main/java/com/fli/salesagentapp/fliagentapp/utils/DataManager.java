@@ -20,46 +20,50 @@ import java.util.ArrayList;
 public class DataManager {
 
     Context context;
+    static DBOperations dbOperations;
     public DataManager(Context context){
         this.context =context;
+        if(dbOperations ==null) {
+            dbOperations = new DBOperations(context);
+        }
     }
 
 
     public RecievedLoan getDetailsforLoanID(String loanid){
-        return new DBOperations(context).getDetailsforLoanID(loanid);
+        return dbOperations.getDetailsforLoanID(loanid);
     }
 
     public ClientPaymentsInfo getAvailablePayments(){
-        return new DBOperations(context).getAvailablePayments();
+        return dbOperations.getAvailablePayments();
     }
     public ClientAttendanceInfo getAvailableAttendance(){
-        return new DBOperations(context).getAvailableAttendance();
+        return dbOperations.getAvailableAttendance();
     }
 
     public void saveMarkedAttendance(MarkedAttendace markedattendance){
-        new DBOperations(context).saveMarkedAttendance(markedattendance);
+        dbOperations.saveMarkedAttendance(markedattendance);
     }
 
     public ArrayList<MarkedAttendace> getMarkedAttendance(){
-        return new DBOperations(context).getMarkedAttendance();
+        return dbOperations.getMarkedAttendance();
     }
 
     public ArrayList<PayeeItem> getPayedLoans(){
-        return new DBOperations(context).getPayedLoans();
+        return dbOperations.getPayedLoans();
     }
 
     public void deleteAttendanceForGroupId(String groupid){
-         new DBOperations(context).deleteAttendanceForGroupId(groupid);
+        dbOperations.deleteAttendanceForGroupId(groupid);
     }
 
     public void updateSyncedPayment(String loanid){
-        new DBOperations(context).updateSyncedPayment(loanid);
+        dbOperations.updateSyncedPayment(loanid);
     }
     public void savePayment(PayeeItem item){
-        new DBOperations(context).savePayment(item);
+        dbOperations.savePayment(item);
     }
 
-    public void saveGroupPaymennts(GroupPaymentItem payment) { new DBOperations(context).saveGroupPaymennts(payment);}
+    public void saveGroupPaymennts(GroupPaymentItem payment) { dbOperations.saveGroupPaymennts(payment);}
 
-    public ArrayList<CenterItem> getCollectionSheet(){ return new DBOperations(context).getCollectionSheet();}
+    public ArrayList<CenterItem> getCollectionSheet(){ return dbOperations.getCollectionSheet();}
 }

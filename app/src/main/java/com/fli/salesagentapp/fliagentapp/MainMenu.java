@@ -89,6 +89,12 @@ public class MainMenu extends AppCompatActivity {
 
     }
 
+   private void stropService(){
+       if(SubmitDataService.isServiceRunning) {
+           SubmitDataService.cuurentService.stopSelf();
+       }
+   }
+
     private void sync_again(){
 
         new SyncLoans().execute();
@@ -114,6 +120,8 @@ public class MainMenu extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             dbOperations.truncateDB();
+            stropService(); //stop existing service to avoid collisions
+            wscalls.sync_PayedLoans(); // sync already available payed loans
             wscalls.sync_loans();
             return null;
         }
