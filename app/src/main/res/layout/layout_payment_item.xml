@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_weight="0.5"
-            android:textColor="@color/app_textbox_text_color"
+            android:textColor="@color/app_text_color"
             android:textColorHint="@color/app_textbox_hint_color" />
     </LinearLayout>
 

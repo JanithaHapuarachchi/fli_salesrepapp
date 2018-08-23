@@ -1,5 +1,7 @@
 package com.fli.salesagentapp.fliagentapp.utils;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by janithah on 8/9/2018.
  */
@@ -27,6 +29,8 @@ public class Constants {
     public static final String TRANSACTIONS_URL = "transactions?command=recoverypayment";
     public static final String ATTENDANCE_URL = "meetings";
     public static final String SQL_SEARCH = "sqlSearch=";
+
+    public static DecimalFormat decimal_places = new DecimalFormat(".##");
 
     public static final String ALL_ASSOCIATIONS = "?associations=all";
    // public static final String ACTIVE_LOANS_URL = "&sqlSearch=cbu.username  is null";

@@ -12,7 +12,7 @@ public class GroupItem {
     public String name;
     public ArrayList<PayeeItem> payees;
     public ArrayList<ClientItem> clients;
-
+    public Double total_def;
 
     @Override
     public String toString() {

@@ -345,7 +345,7 @@ public class LoansFragment extends Fragment {
         }
         else{
             selected_loan = loan;
-            txt_loan_id.setText(loan.loan_id);
+            txt_loan_id.setText(loan.loan_accountno);
             txt_loan_client.setText(loan.client_name);
             txt_loan_name.setText(loan.loan_name);
             txt_loan_totbal.setText(loan.total_balance);
@@ -358,6 +358,7 @@ public class LoansFragment extends Fragment {
 
     private void clearAllData(){
         selected_loan = null;
+        txt_loan_no.setText("");
         txt_loan_id.setText("");
         txt_loan_client.setText("");
         txt_loan_name.setText("");
@@ -413,7 +414,7 @@ public class LoansFragment extends Fragment {
 
         @Override
         protected RecievedLoan doInBackground(String... params) {
-            return dmManager.getDetailsforLoanID(params[0]);
+            return dmManager.getDetailsforLoanNumber(params[0]);
         }
     }
 

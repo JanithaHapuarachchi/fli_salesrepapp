@@ -126,6 +126,8 @@ public class Utility {
         return networkInfo != null && networkInfo.isConnected();
     }
 
+
+
     public static boolean isMajorServiceRunning(Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager

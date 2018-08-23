@@ -2,6 +2,8 @@ package com.fli.salesagentapp.fliagentapp;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +14,7 @@ import com.fli.salesagentapp.fliagentapp.adapters.MainMenuAdapter;
 import com.fli.salesagentapp.fliagentapp.db.DBOperations;
 import com.fli.salesagentapp.fliagentapp.services.SubmitDataService;
 import com.fli.salesagentapp.fliagentapp.utils.Constants;
+import com.fli.salesagentapp.fliagentapp.utils.DataManager;
 import com.fli.salesagentapp.fliagentapp.utils.ProgressBarController;
 import com.fli.salesagentapp.fliagentapp.utils.Utility;
 import com.fli.salesagentapp.fliagentapp.utils.WSCalls;
@@ -26,7 +29,8 @@ public class MainMenu extends AppCompatActivity {
     GridView menu_grid;
     ArrayList<JSONObject> menu_items;
     ProgressBarController prgController;
-    DBOperations dbOperations;
+    DataManager dtManager;
+    int pendingCount = 0 ;
 
 
     @Override
@@ -37,7 +41,7 @@ public class MainMenu extends AppCompatActivity {
         menu_grid = (GridView)findViewById(R.id.menu_grid);
         menu_items = new ArrayList<JSONObject>();
         wscalls = new WSCalls(getApplicationContext());
-        dbOperations = new DBOperations(getApplicationContext());
+        dtManager = new DataManager(getApplicationContext());
         prgController = new ProgressBarController(this);
         try {
             menu_items.add(new JSONObject().put("img","loans").put("txt","Loans"));
@@ -54,6 +58,7 @@ public class MainMenu extends AppCompatActivity {
             sync_again();
         }
         else{
+            new GetPendingCount().execute();
             startService();
         }
 
@@ -100,6 +105,40 @@ public class MainMenu extends AppCompatActivity {
         new SyncLoans().execute();
     }
 
+    private void generateNotificationForPendingCount(int count){
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(),"");
+        mBuilder.setSmallIcon(R.mipmap.ic_launcher)
+        .setContentTitle("Pending Loan Sync Count").setContentText(""+count)
+        .setPriority(NotificationCompat.PRIORITY_HIGH);
+        notificationManager.notify(1,mBuilder.build());
+
+    }
+
+    class GetPendingCount extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            prgController.showProgressBar("Finding Pending...");
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            prgController.hideProgressBar();
+            if(pendingCount>0){
+                generateNotificationForPendingCount(pendingCount);
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            pendingCount = dtManager.getTotalPendingSyncCount();
+            return null;
+        }
+    }
+
     class SyncLoans extends AsyncTask<Void,Void,Void>{
 
         @Override
@@ -119,7 +158,7 @@ public class MainMenu extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            dbOperations.truncateDB();
+            dtManager.truncateDB();
             stropService(); //stop existing service to avoid collisions
             wscalls.sync_PayedLoans(); // sync already available payed loans
             wscalls.sync_loans();

@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#000520</color>
-    <color name="colorPrimaryDark">#1f1f21</color>
+    <!--#1f1f21-->
+    <color name="colorPrimaryDark">#013361</color>
     <color name="colorAccent">#FF4081</color>
 
     <color name="white">#fff</color>
     <color name="app_textbox_hint_color">#9f9f9f</color>
-    <color name="app_textbox_text_color">#b5babf</color>
+    <color name="app_textbox_text_color">#353535</color>
+    <!--#b5babf-->
     <color name="app_text_color">#c0cdd9</color>
     <color name="app_text_color_warning">#eccd01</color>
     <color name="app_text_background">#f7f6f7</color>
     <color name="app_background">#013361</color>
+    <color name="app_background_shadow">#d3013361</color>
     <color name="app_background_shaded">#173d8a50</color>
     <color name="green">#1ea07b</color>
     <color name="green_button">#00b3a1</color>

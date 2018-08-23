@@ -17,6 +17,7 @@ import com.fli.salesagentapp.fliagentapp.R;
 import com.fli.salesagentapp.fliagentapp.data.ClientItem;
 import com.fli.salesagentapp.fliagentapp.data.CollectionItem;
 import com.fli.salesagentapp.fliagentapp.data.PayeeItem;
+import com.fli.salesagentapp.fliagentapp.utils.Constants;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,7 @@ public class IssuePaymentAdapter extends BaseAdapter {
     TextView pay_total;
     double total = 0 ;
     int beforeval;
+    double initial_total_payment = 0 ;
 
     static class ViewHolder {
         TextView txt_id,txt_name,txt_payment_due;
@@ -49,12 +51,13 @@ public class IssuePaymentAdapter extends BaseAdapter {
 //        total = 0;
 //    }
 
-    public IssuePaymentAdapter(Context context,ArrayList<ClientItem> items,TextView pay_total) {
+    public IssuePaymentAdapter(Context context,ArrayList<ClientItem> items,TextView pay_total,double initial_total_payment) {
         // super(context, R.layout.layout_payment_item,items);
         this.clientItems = items;
         this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);//LayoutInflater.from(context);
         this.context =context;
         this.pay_total = pay_total;
+        this.initial_total_payment = initial_total_payment;
         total = 0;
     }
 
@@ -89,6 +92,7 @@ public class IssuePaymentAdapter extends BaseAdapter {
     public View getView(int position, View view, ViewGroup viewGroup) {
         if(position ==0) {
             total = 0;
+            pay_total.setText(Constants.decimal_places.format(initial_total_payment));
         }
         View v = view;
         final TextView txt_id,txt_name,txt_payment_due;
@@ -125,7 +129,11 @@ public class IssuePaymentAdapter extends BaseAdapter {
         holder.no = position;
 
         total += Double.parseDouble(item.def.trim());
-        pay_total.setText(""+total);
+
+        //pay_total.setText(""+total);
+//        if(position ==clientItems.size()-1) {
+//            pay_total.setText(Constants.decimal_places.format(total));
+//        }
         Log.e("FLI RE 1 TOTAL ",""+total+"->"+position+"->"+item.def);
 
         TextEditor oldWatcher = (TextEditor) holder.txt_payment.getTag();
@@ -255,14 +263,24 @@ public class IssuePaymentAdapter extends BaseAdapter {
         public void afterTextChanged(Editable s) {
             amount = (EditText) view.findViewById(R.id.txt_payment);
             String text = amount.getText().toString();
+
             if(text.equals("")){
                 text = "0";
             }
-
+            else{
+                text = ""+Double.valueOf(Constants.decimal_places.format(Double.parseDouble(text)));
+               // text = Constants.decimal_places.format(text);
+               //text =  String.format("%.2f", text);
+            }
             Log.e("FLI AMOUNT",amount.getText().toString());
             //items.get(position).payment =text;
+
+            //clientItems.get(position).def =text;
+
+
+            initial_total_payment =  initial_total_payment + Double.valueOf(Constants.decimal_places.format(Double.parseDouble(text)))- Double.valueOf(Constants.decimal_places.format(Double.parseDouble(clientItems.get(position).def)));
             clientItems.get(position).def =text;
-          //  pay_total.setText(total);
+             pay_total.setText(""+Constants.decimal_places.format(initial_total_payment));
            // return;
         }
     }

@@ -264,9 +264,10 @@ public class PaymentsFragment extends Fragment {
 
     private void populate_group_payments(int group_index){
         selected_group =groups.get(group_index);
+        pay_total.setText(""+selected_group.total_def);
       //  IssuePaymentAdapter issuePaymentAdapter = new IssuePaymentAdapter(getContext(),selected_group.payees,pay_total);
       //  center_payees.setAdapter(issuePaymentAdapter);
-         issuePaymentAdapter = new IssuePaymentAdapter(getContext(),groupClients.get(selected_group.id),pay_total);
+         issuePaymentAdapter = new IssuePaymentAdapter(getContext(),groupClients.get(selected_group.id),pay_total,selected_group.total_def);
         center_payees.setAdapter(issuePaymentAdapter);
 
     }

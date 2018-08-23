@@ -39,7 +39,7 @@ public class DBOperations  extends SQLiteOpenHelper {
 
     public void truncateDB(){
         db = this.getWritableDatabase();
-        //TableAttendanceTransactions.droptable(db);
+        TableAttendanceTransactions.droptable(db);
         TableLoanTransactions.droptable(db);
         TableRecievedLoans.droptable(db);
         TableAttendanceTransactions.onCreate(db);
@@ -74,7 +74,7 @@ public class DBOperations  extends SQLiteOpenHelper {
             groupclients.put(groupItem.id,client_set);
         }
        // db.endTransaction();
-       // db.close();
+      //  db.close();
       //  db = null;
 
         info.centers = centers;
@@ -105,6 +105,7 @@ public class DBOperations  extends SQLiteOpenHelper {
             groupItem = groups.get(j);
             client_set = getClientsForGroups(groupItem,filter_type);
             groupItem.clients =client_set;
+            groupItem.total_def = getTotalExpectedPaymentForGroup(groupItem.id);
             groups.set(j,groupItem);
             groupclients.put(groupItem.id,client_set);
         }
@@ -117,6 +118,18 @@ public class DBOperations  extends SQLiteOpenHelper {
         info.groups = groups;
         info.groupclients = groupclients;
         return info;
+    }
+
+    public Double getTotalExpectedPaymentForGroup(String group_id){
+        double total = 0.00;
+        String countQuery = "SELECT SUM("
+                +TableRecievedLoans.LOAN_DEFAULT+") AS sumtotal"
+                +" FROM " + TableRecievedLoans.TABLE_NAME+"  WHERE "+TableRecievedLoans.LOAN_GROUP_ID+" =?  AND "+TableRecievedLoans.MARKED_PAYMENT+" =?";
+        Cursor cursor = db.rawQuery(countQuery, new String[]{group_id,Constants.SYCED_NOT});
+        if(cursor.moveToFirst()){
+            total = cursor.getDouble(0);
+        }
+        return total;
     }
 
     public ArrayList<ClientItem> getClientsForGroups(GroupItem group,String filter_type){
@@ -309,7 +322,7 @@ public class DBOperations  extends SQLiteOpenHelper {
         }
         cursor.close();
         //db.endTransaction();
-      //  db.close();
+        // db.close();
       //  db = null;
         if(loan != null)
             Log.e("FLI LOAN",loan.toString());
@@ -337,6 +350,20 @@ public class DBOperations  extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
             count = cursor.getInt(0);
         }
+        return count;
+    }
+
+    public int getTotalPendingSyncCount(){
+        int count = 0;
+        db = this.getReadableDatabase();
+        String countQuery = "SELECT COUNT("
+                +TableLoanTransactions.DEPOSIT_LOAN_ID+") AS pendingsynccount"
+                +" FROM " + TableLoanTransactions.TABLE_NAME+"  WHERE "+TableLoanTransactions.DEPOSIT_SYNCED+" = ? ";
+                Cursor cursor = db.rawQuery(countQuery, new String[]{Constants.SYCED_NOT});
+        if(cursor.moveToFirst()){
+            count = cursor.getInt(0);
+        }
+       // db.close();
         return count;
     }
 
@@ -368,7 +395,7 @@ public class DBOperations  extends SQLiteOpenHelper {
         return centers;
     }
 
-    public RecievedLoan getDetailsforLoanID(String loanid){
+    public RecievedLoan getDetailsforLoanNumber(String loannumber){
         RecievedLoan loan =null;
         db = this.getReadableDatabase();
         String countQuery = "SELECT "
@@ -388,8 +415,8 @@ public class DBOperations  extends SQLiteOpenHelper {
                 +TableRecievedLoans.LOAN_EXTERNALID+","
                 +TableRecievedLoans.LOAN_ACCOUNTNO+","
                 +TableRecievedLoans.LOAN_TYPE
-                +" FROM " + TableRecievedLoans.TABLE_NAME+" WHERE "+TableRecievedLoans.LOAN_ID+" =?";
-        Cursor cursor = db.rawQuery(countQuery, new String[]{loanid});
+                +" FROM " + TableRecievedLoans.TABLE_NAME+" WHERE "+TableRecievedLoans.LOAN_ACCOUNTNO+" =?";
+        Cursor cursor = db.rawQuery(countQuery, new String[]{loannumber});
         if(cursor.moveToFirst()){
             Log.e("FLI CURSOR LOAN",cursor.toString());
             loan = new RecievedLoan();
@@ -428,7 +455,7 @@ public class DBOperations  extends SQLiteOpenHelper {
                 new String[]{loanid});
         db.setTransactionSuccessful();
         db.endTransaction();
-//        db.close();
+        //  db.close();
 //        db =null;
     }
 
@@ -588,7 +615,7 @@ public class DBOperations  extends SQLiteOpenHelper {
         }
         cursor.close();
         // db.endTransaction();
-      //  db.close();
+       // db.close();
        // db = null;
 
         return payedloans;
@@ -607,7 +634,7 @@ public class DBOperations  extends SQLiteOpenHelper {
                 mattendance.clients = getAttendaceMarkedClientsForGroup(mattendance.group_id);
             }
            // db.endTransaction();
-           // db.close();
+          //  db.close();
           //  db = null;
        // }
         return  markedAttendaces;
@@ -658,6 +685,9 @@ public class DBOperations  extends SQLiteOpenHelper {
         //db = null;
     }
 
+
+
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         TableAttendanceTransactions.onCreate(db);
@@ -667,11 +697,13 @@ public class DBOperations  extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //TableAttendanceTransactions.droptable(db);
-        //TableLoanTransactions.droptable(db);
+        TableAttendanceTransactions.droptable(db);
+        TableLoanTransactions.droptable(db);
         TableRecievedLoans.droptable(db);
         onCreate(db);
     }
+
+
 
 
 }

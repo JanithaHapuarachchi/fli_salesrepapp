@@ -29,8 +29,8 @@ public class DataManager {
     }
 
 
-    public RecievedLoan getDetailsforLoanID(String loanid){
-        return dbOperations.getDetailsforLoanID(loanid);
+    public RecievedLoan getDetailsforLoanNumber(String loannumber){
+        return dbOperations.getDetailsforLoanNumber(loannumber);
     }
 
     public ClientPaymentsInfo getAvailablePayments(){
@@ -66,4 +66,15 @@ public class DataManager {
     public void saveGroupPaymennts(GroupPaymentItem payment) { dbOperations.saveGroupPaymennts(payment);}
 
     public ArrayList<CenterItem> getCollectionSheet(){ return dbOperations.getCollectionSheet();}
+
+    public int getTotalPendingSyncCount(){ return dbOperations.getTotalPendingSyncCount();}
+
+    public void truncateDB(){
+        dbOperations.truncateDB();
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }
