@@ -304,7 +304,7 @@ public class LoansFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-     @SuppressLint("ValidFragment")
+    /* @SuppressLint("ValidFragment")
      class SelectDateFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         @Override
@@ -333,7 +333,7 @@ public class LoansFragment extends Fragment {
 
         }
 
-    }
+    }*/
 
     private void populateLoanDetails(RecievedLoan loan){
         if(loan ==null){
