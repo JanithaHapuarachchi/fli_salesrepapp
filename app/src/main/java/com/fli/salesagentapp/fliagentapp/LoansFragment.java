@@ -3,10 +3,11 @@ package com.fli.salesagentapp.fliagentapp;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
+
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,6 +56,7 @@ public class LoansFragment extends Fragment {
     DataManager dmManager;
     boolean cheque_checked = false;
     String str_payday;
+    public static DialogFragment newFragment;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -190,8 +192,11 @@ public class LoansFragment extends Fragment {
         loan_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment newFragment = new SelectDateFragment();
-                newFragment.show(getActivity().getFragmentManager(), "DatePicker");
+//                if(newFragment ==null) {
+//
+//                }
+                newFragment = new SelectDateFragment();
+                newFragment.show(getActivity().getSupportFragmentManager(), "DatePicker");
 
                 //getActivity().showDialog(999);
             }
