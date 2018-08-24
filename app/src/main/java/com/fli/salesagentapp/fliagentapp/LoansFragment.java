@@ -55,7 +55,7 @@ public class LoansFragment extends Fragment {
     RecievedLoan selected_loan;
     DataManager dmManager;
     boolean cheque_checked = false;
-    String str_payday;
+    static String str_payday;
     public static DialogFragment newFragment;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -192,11 +192,11 @@ public class LoansFragment extends Fragment {
         loan_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if(newFragment ==null) {
-//
-//                }
-                newFragment = new SelectDateFragment();
-                newFragment.show(getActivity().getSupportFragmentManager(), "DatePicker");
+                if(newFragment ==null) {
+                    newFragment = new SelectDateFragment(year,month,day);
+                }
+
+                newFragment.show(getFragmentManager(), "DatePicker");
 
                 //getActivity().showDialog(999);
             }

@@ -95,10 +95,11 @@ public class WSCalls {
         long offset = 0;
         long totalresults;
         String urlencodestrring;
+        long i;
         try {
             if(Utility.isConnected(context)) {
                 urlencodestrring = URLEncoder.encode(Constants.ACTIVE_USER_URL + Utility.getStaffID(context) + Constants.ACTIVE_LOANS_URL, "UTF-8");
-                for (long i = 0; i < loopcount; i++) {
+                for ( i = 0; i < loopcount; i++) {
                     Log.e("FLI loopcount i", "" + loopcount + " : " + i);
                     request = Constants.LOANS_URL + "?" + "offset=" + offset + "&limit=" + limit + "&" + Constants.SQL_SEARCH + urlencodestrring;
                     try {
@@ -127,13 +128,18 @@ public class WSCalls {
                         Log.e("FLI E LOANS", e.getMessage());
                         res_object.validity = Constants.VALIDITY_FAILED;
                         res_object.msg = "Sync Loans Failed";
+                        return res_object;
                         // res_object.msg = e.getMessage();
                     }
 
                     offset = (i + 1) * limit;
                 }
+                res_object.validity = Constants.VALIDITY_SUCCESS;
+
+
             }
             else{
+                Utility.clearCurrentUserLoginDate(context);
                 res_object = new ResObject();
                 res_object.validity = Constants.VALIDITY_FAILED;
                 res_object.msg = Constants.NETWORK_NOT_FOUND;
@@ -145,28 +151,40 @@ public class WSCalls {
         Log.e("FLI E2 LOANS", e.getMessage());
         res_object.validity = Constants.VALIDITY_FAILED;
         res_object.msg = e.getMessage();
+            return res_object;
         // res_object.msg = e.getMessage();
     }
 
         new DBOperations(context).saveRecievedLoans(res_loans);
 //        Log.e("FLI LOANS",loans.toString());
-        return null;
+        return res_object;
     }
 
-    public ArrayList<RecievedLoan> getLoansFromArray(JSONArray recieved){
+    public ArrayList<RecievedLoan> getLoansFromArray(JSONArray recieved) throws Exception {
         JSONObject res,group,summary,loanType;
         ArrayList<RecievedLoan> resloans = new ArrayList<RecievedLoan>();
         RecievedLoan loan;
         for(int i=0; i< recieved.length();i++){
-            try {
+           // try {
             res= recieved.getJSONObject(i);
             loan = new RecievedLoan();
            Log.e("FLI Res ",res.toString());
             loan.loan_id = String.valueOf(res.getLong("id"));
             loan.loan_name = res.getString("loanProductName");
             loan.loan_accountno =  res.getString("accountNo");
-            loan.loan_externalid = res.getString("externalId");
-            group = res.getJSONObject("group");
+            if(Utility.isJSONKeyAvailable(res,"externalId")) {
+                loan.loan_externalid = res.getString("externalId");
+            }
+            else{
+                loan.loan_externalid ="";
+            }
+            if(Utility.isJSONKeyAvailable(res,"group")) {
+                group = res.getJSONObject("group");
+            }
+            else{
+                group = new JSONObject();
+            }
+
             summary = res.getJSONObject("summary");
             loanType =  res.getJSONObject("loanType");
             loan.type = loanType.getString("value");
@@ -191,9 +209,10 @@ public class WSCalls {
 
             loan = get_loan_associations(loan);
             resloans.add(loan);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+         //   } catch (Exception e) {
+         //       Log.e("FLI LOAN RES",e.getMessage());
+         //       e.printStackTrace();
+         //   }
         }
 
         return  resloans;
@@ -251,6 +270,7 @@ public class WSCalls {
     }
 
     public void sync_PayedLoans(){
+
         String response,request;
         JSONObject jRequest,jResponse;
         ArrayList<PayeeItem> payedLoans = dtManager.getPayedLoans();

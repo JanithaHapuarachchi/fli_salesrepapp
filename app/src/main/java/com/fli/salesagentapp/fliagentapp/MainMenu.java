@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.fli.salesagentapp.fliagentapp.adapters.MainMenuAdapter;
+import com.fli.salesagentapp.fliagentapp.data.ResObject;
 import com.fli.salesagentapp.fliagentapp.db.DBOperations;
 import com.fli.salesagentapp.fliagentapp.services.SubmitDataService;
 import com.fli.salesagentapp.fliagentapp.utils.Constants;
@@ -31,6 +32,7 @@ public class MainMenu extends AppCompatActivity {
     ProgressBarController prgController;
     DataManager dtManager;
     int pendingCount = 0 ;
+    ResObject res_objectt;
 
 
     @Override
@@ -139,6 +141,11 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
+    public void errorInLoadingLoans(){
+        Utility.showMessage("Unable To Load Loans. Try Again",getApplicationContext());
+        finish();
+    }
+
     class SyncLoans extends AsyncTask<Void,Void,Void>{
 
         @Override
@@ -151,8 +158,12 @@ public class MainMenu extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             prgController.hideProgressBar();
-            startService();
-
+            if(res_objectt.validity.equals(Constants.VALIDITY_SUCCESS)) {
+                startService();
+            }
+            else{
+               errorInLoadingLoans();
+            }
 
         }
 
@@ -161,7 +172,7 @@ public class MainMenu extends AppCompatActivity {
             dtManager.truncateDB();
             stropService(); //stop existing service to avoid collisions
             wscalls.sync_PayedLoans(); // sync already available payed loans
-            wscalls.sync_loans();
+            res_objectt = wscalls.sync_loans();
             return null;
         }
     }

@@ -20,18 +20,25 @@ import java.util.Date;
 /**
  * Created by anjanan on 8/23/2018.
  */
-
 @SuppressLint("ValidFragment")
-class SelectDateFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+public class SelectDateFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
     private Calendar calendar;
     private int year, month, day;
+    String str_payday;
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day = calendar.get(Calendar.DAY_OF_MONTH);
+    //    calendar = Calendar.getInstance();
+    //    year = calendar.get(Calendar.YEAR);
+    //    month = calendar.get(Calendar.MONTH);
+     //   day = calendar.get(Calendar.DAY_OF_MONTH);
         return new DatePickerDialog(getActivity(), this, year, month, day);
+    }
+
+
+    public SelectDateFragment(int year, int month, int day){
+        this.year = year;
+        this.month = month;
+        this.day =day;
     }
 
     public void onDateSet(DatePicker view, int yy, int mm, int dd) {
@@ -49,9 +56,9 @@ class SelectDateFragment extends DialogFragment implements DatePickerDialog.OnDa
         calendar.set(Calendar.DAY_OF_MONTH,day);
         Date c = calendar.getTime();
         SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
-        String str_payday = df.format(c);
+        LoansFragment.str_payday = df.format(c);
         EditText loan_date = (EditText) getActivity().findViewById(R.id.edit_loan_date);
-        loan_date.setText(str_payday);
+        loan_date.setText(LoansFragment.str_payday);
 
     }
 
