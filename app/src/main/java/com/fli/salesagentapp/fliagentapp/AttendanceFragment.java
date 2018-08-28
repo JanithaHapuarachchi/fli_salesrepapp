@@ -1,5 +1,7 @@
 package com.fli.salesagentapp.fliagentapp;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fli.salesagentapp.fliagentapp.adapters.AttendanceAdapter;
 import com.fli.salesagentapp.fliagentapp.adapters.PaymentLoadCentersAdapter;
@@ -68,8 +71,8 @@ public class AttendanceFragment extends Fragment {
     DataManager dmManager;
     AttendanceAdapter attendanceAdapter;
     String str_today;
-    boolean init_centers =false;
-    boolean init_groups =false;
+    boolean init_centers =true;
+    boolean init_groups =true;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -143,16 +146,7 @@ public class AttendanceFragment extends Fragment {
         btn_mark_attendance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(selected_center == null || selected_group == null){
-                    Utility.showMessage("Please Select center and group",getContext());
-                }
-                else if(selected_group.clients.size()==0){
-                    Utility.showMessage("There are no Clients",getContext());
-                }
-                else{
-                    Utility.stopService();
-                    new SaveClientAttendants().execute();
-                }
+                confirmDialog();
             }
         });
 
@@ -198,6 +192,37 @@ public class AttendanceFragment extends Fragment {
         });
 
         return  view;
+    }
+
+    private void confirmDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(true);
+        builder.setMessage("Are you sure?");
+        builder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(selected_center == null || selected_group == null){
+                            Utility.showMessage("Please Select center and group",getContext());
+                        }
+                        else if(selected_group.clients.size()==0){
+                            Utility.showMessage("There are no Clients",getContext());
+                        }
+                        else{
+                            Utility.stopService();
+                            new SaveClientAttendants().execute();
+                        }
+                    }
+                });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 
     private void populate_group_payments(int group_index){
@@ -348,6 +373,7 @@ public class AttendanceFragment extends Fragment {
             initialCenters.remove(pos_selectedcenter);
         }
         spinner_center_names.setAdapter(new PaymentLoadCentersAdapter(getContext(),centers));
+        Toast.makeText(getContext(),"Attendance Recorded!",Toast.LENGTH_LONG).show();
     }
 
     class SaveClientAttendants extends AsyncTask<Void,Void,Void>{
