@@ -72,9 +72,18 @@
 
         </LinearLayout>
 
-
    </RelativeLayout>
-
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/server_sttings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/app_text_color"
+        android:tint="@color/app_background"
+        app:borderWidth="0dp"
+        android:src="@drawable/settings"/>
     <include layout="@layout/layout_progress_bar" />
 
 </RelativeLayout>

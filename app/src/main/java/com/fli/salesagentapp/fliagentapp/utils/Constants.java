@@ -19,7 +19,9 @@ public class Constants {
     public static final String STAFF_ID ="STAFF_ID";
     public static final String SHOULD_SYNC_AGAIN = "SHOULD_SYNC_AGAIN";
 
-
+    public static String SERVER_URL_DEFAULT = "https://52.74.229.37";
+    public static String SERVER_PORT_DEFAULT = "443";
+    public static String SERVER_TENANT_DEFAULT = "default";
     public static String SERVER_URL = "SERVER_URL";
     public static String SERVER_PORT = "SERVER_PORT";
     public static String SERVER_TENANT = "SERVER_TENANT";

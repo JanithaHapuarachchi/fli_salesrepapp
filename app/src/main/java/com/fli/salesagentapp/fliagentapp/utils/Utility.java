@@ -1,15 +1,27 @@
 package com.fli.salesagentapp.fliagentapp.utils;
 
 import android.app.ActivityManager;
+
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fli.salesagentapp.fliagentapp.R;
 import com.fli.salesagentapp.fliagentapp.data.CurrentUser;
+import com.fli.salesagentapp.fliagentapp.data.ServerDetails;
 import com.fli.salesagentapp.fliagentapp.services.SubmitDataService;
 
 import org.json.JSONArray;
@@ -47,6 +59,17 @@ public class Utility {
         SharedPreferences preferences =  getSharedPrefs(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(Constants.LAST_LOGGED_DATE,"");
+        editor.commit();
+    }
+
+
+    public static void setServerDetails(Context context, ServerDetails serverDetails){
+        Log.e("FLI CURRENT USER",serverDetails.toString());
+        SharedPreferences preferences =  getSharedPrefs(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Constants.SERVER_URL, serverDetails.server_name);
+        editor.putString(Constants.SERVER_PORT, serverDetails.server_port);
+        editor.putString(Constants.SERVER_TENANT,serverDetails.server_tenant);
         editor.commit();
     }
 
@@ -88,6 +111,21 @@ public class Utility {
 
     }
 
+    public static String getServerURL(Context context){
+        SharedPreferences preferences =  getSharedPrefs(context);
+        return preferences.getString(Constants.SERVER_URL, "");
+    }
+
+    public static String getServerPORT(Context context){
+        SharedPreferences preferences =  getSharedPrefs(context);
+        return preferences.getString(Constants.SERVER_PORT, "");
+    }
+
+    public static String getServerTenant(Context context){
+        SharedPreferences preferences =  getSharedPrefs(context);
+        return preferences.getString(Constants.SERVER_TENANT, "");
+    }
+
     public static String getStaffID(Context context){
         SharedPreferences preferences =  getSharedPrefs(context);
         return preferences.getString(Constants.STAFF_ID, "");
@@ -126,8 +164,6 @@ public class Utility {
         return networkInfo != null && networkInfo.isConnected();
     }
 
-
-
     public static boolean isMajorServiceRunning(Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager
@@ -142,6 +178,67 @@ public class Utility {
 
     public static void stopService(){
       //  SubmitDataService.stopAsync();
+    }
+
+    public static Dialog change_ServerSettings(final Context context){
+        final Dialog dialog = new Dialog(context);
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        LayoutInflater inf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        View view = inf.inflate(R.layout.change_server_details, null);
+        dialog.setContentView(R.layout.change_server_details);
+        final EditText server_name = (EditText) dialog.findViewById(R.id.server_name);
+        final EditText server_port = (EditText) dialog.findViewById(R.id.server_port);
+        final EditText server_tenant = (EditText) dialog.findViewById(R.id.server_tenant);
+        final ImageView closeicon = (ImageView) dialog.findViewById(R.id.closeimg);
+        server_name.setText(Utility.getServerURL(context));
+        server_port.setText(Utility.getServerPORT(context));
+        server_tenant.setText(Utility.getServerTenant(context));
+        closeicon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        final Button reset = (Button) dialog.findViewById(R.id.btn_close);
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        final Button save = (Button) dialog.findViewById(R.id.btn_save);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    if (server_name.getText().toString().length() > 1) {
+                        if (server_port.getText().toString().length() > 1) {
+                            if (server_tenant.getText().toString().length() > 1) {
+                                ServerDetails sd =new ServerDetails();
+                                sd.server_name = server_name.getText().toString();
+                                sd.server_port = server_port.getText().toString();
+                                sd.server_tenant = server_tenant.getText().toString();
+                                Utility.setServerDetails(context,sd);
+                                dialog.dismiss();
+                                Utility.showMessage("Successfully Saved Data", context);
+                            } else {
+                                Utility.showMessage("Server Tenant Required", context);
+                            }
+                        } else {
+                            Utility.showMessage("Server Port Required", context);
+                        }
+                    } else {
+                        Utility.showMessage("Server Name Required", context);
+                    }
+                } catch (Exception e) {
+                    Utility.showMessage("Error", context);
+                }
+            }
+        });
+        //dialog.setContentView(view);
+        dialog.setCancelable(false);
+        return dialog;
     }
 
 }

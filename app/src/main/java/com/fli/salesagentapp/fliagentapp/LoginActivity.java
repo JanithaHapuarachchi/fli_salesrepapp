@@ -3,6 +3,7 @@ package com.fli.salesagentapp.fliagentapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 
 import com.fli.salesagentapp.fliagentapp.data.CurrentUser;
 import com.fli.salesagentapp.fliagentapp.data.ResObject;
+import com.fli.salesagentapp.fliagentapp.data.ServerDetails;
 import com.fli.salesagentapp.fliagentapp.db.DBOperations;
 import com.fli.salesagentapp.fliagentapp.utils.Constants;
 import com.fli.salesagentapp.fliagentapp.utils.ProgressBarController;
@@ -37,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     WSCalls wscalls;
     String str_last_logged_date;
     static CurrentUser currentUser;
+    FloatingActionButton server_sttings;
     DBOperations dbOperations;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,8 @@ public class LoginActivity extends AppCompatActivity {
         txt_username = (EditText)findViewById(R.id.txt_username);
         txt_password = (EditText)findViewById(R.id.txt_password);
         btn_login = (Button)findViewById(R.id.btn_login);
+        server_sttings= (FloatingActionButton)findViewById(R.id.server_sttings);
+
         context =getApplicationContext();
         //new DBOperations(getApplicationContext()).getSavedAttendace();
         wscalls = new WSCalls(getApplicationContext());
@@ -56,6 +61,13 @@ public class LoginActivity extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
         str_today = df.format(c);
         prgController = new ProgressBarController(this);
+
+        server_sttings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utility.change_ServerSettings(LoginActivity.this).show();
+            }
+        });
        // new InitiateSSL().execute();
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +83,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+        if(Utility.getServerURL(getApplicationContext()).equals("")||Utility.getServerPORT(getApplicationContext()).equals("") || Utility.getServerTenant(getApplicationContext()).equals("")){
+            ServerDetails sd =new ServerDetails();
+            sd.server_name = Constants.SERVER_URL_DEFAULT;
+            sd.server_port = Constants.SERVER_PORT_DEFAULT;
+            sd.server_tenant = Constants.SERVER_TENANT_DEFAULT;
+            Utility.setServerDetails(getApplicationContext(),sd);
+        }
 
     }
 

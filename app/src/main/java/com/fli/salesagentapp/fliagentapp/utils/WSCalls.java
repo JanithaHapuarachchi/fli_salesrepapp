@@ -76,9 +76,33 @@ public class WSCalls {
             loan.def =  String.valueOf(rental);
         }
         else{
-            loan.def =  String.valueOf(transactionJSON.getJSONObject(transactionJSON.length()-1).getDouble("amount"));
+            Double repayment = getRepaymentFromTransaction(transactionJSON);
+            if(repayment != null){
+                loan.def = String.valueOf(repayment);
+            }
+            else{
+                loan.def =  String.valueOf(rental);
+            }
+            //loan.def =  String.valueOf(transactionJSON.getJSONObject(transactionJSON.length()-1).getDouble("amount"));
         }
         return loan;
+    }
+
+    public Double getRepaymentFromTransaction(JSONArray transactionJSON) throws JSONException {
+        Double repayment = null;
+        JSONObject resJSON,typeJSON;
+        for(int i = transactionJSON.length()-1;i>=0;i--){
+            resJSON = transactionJSON.getJSONObject(i);
+            if(!resJSON.getBoolean("manuallyReversed")){
+                typeJSON = resJSON.getJSONObject("type");
+                if(typeJSON.getInt("id")==2){
+                    repayment = resJSON.getDouble("amount");
+                    break;
+                }
+            }
+
+        }
+        return  repayment;
     }
 
     public ResObject sync_loans(){
