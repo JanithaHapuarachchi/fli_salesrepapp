@@ -189,13 +189,13 @@ public class DBOperations  extends SQLiteOpenHelper {
             countQuery = "SELECT DISTINCT "
                     + TableRecievedLoans.LOAN_GROUP_ID + ","
                     + TableRecievedLoans.LOAN_GROUP_NAME
-                    + " FROM " + TableRecievedLoans.TABLE_NAME + " WHERE " + TableRecievedLoans.LOAN_CENTER_ID + " =? AND " + TableRecievedLoans.LOAN_TYPE + " =? AND " + TableRecievedLoans.MARKED_PAYMENT + " =?";
+                    + " FROM " + TableRecievedLoans.TABLE_NAME + " WHERE " + TableRecievedLoans.LOAN_CENTER_ID + " =? AND " + TableRecievedLoans.LOAN_TYPE + " =? AND " + TableRecievedLoans.MARKED_PAYMENT + " =? ORDER BY "+ TableRecievedLoans.LOAN_GROUP_NAME +" ASC";
         }
         else{
             countQuery = "SELECT DISTINCT "
                     + TableRecievedLoans.LOAN_GROUP_ID + ","
                     + TableRecievedLoans.LOAN_GROUP_NAME
-                    + " FROM " + TableRecievedLoans.TABLE_NAME + " WHERE " + TableRecievedLoans.LOAN_CENTER_ID + " =? AND " + TableRecievedLoans.LOAN_TYPE + " =? AND " + TableRecievedLoans.MARKED_ATTENDANCE + " =?";
+                    + " FROM " + TableRecievedLoans.TABLE_NAME + " WHERE " + TableRecievedLoans.LOAN_CENTER_ID + " =? AND " + TableRecievedLoans.LOAN_TYPE + " =? AND " + TableRecievedLoans.MARKED_ATTENDANCE + " =? ORDER BY "+ TableRecievedLoans.LOAN_GROUP_NAME +" ASC";
         }
             Cursor cursor = db.rawQuery(countQuery,new String[]{center.id, Constants.LOAN__TYPE_GROUP,Constants.SYCED_NOT});
         //cursor.moveToFirst();
@@ -246,7 +246,7 @@ public class DBOperations  extends SQLiteOpenHelper {
              countQuery = "SELECT DISTINCT "
                     + TableRecievedLoans.LOAN_CENTER_ID + ","
                     + TableRecievedLoans.LOAN_CENTER_NAME
-                    + " FROM " + TableRecievedLoans.TABLE_NAME + " WHERE " + TableRecievedLoans.MARKED_PAYMENT + " =?";
+                    + " FROM " + TableRecievedLoans.TABLE_NAME + " WHERE " + TableRecievedLoans.MARKED_PAYMENT + " =? ";
         }
         else{
              countQuery = "SELECT DISTINCT "

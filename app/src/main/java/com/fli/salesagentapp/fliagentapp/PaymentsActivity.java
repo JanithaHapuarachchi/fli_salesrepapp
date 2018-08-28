@@ -42,8 +42,8 @@ public class PaymentsActivity extends AppCompatActivity { // implements TextWatc
     ArrayList<PayeeItem> payees;
     GroupItem selected_group;
 
-    boolean init_centers =false;
-    boolean init_groups =false;
+    boolean init_centers =true;
+    boolean init_groups =true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

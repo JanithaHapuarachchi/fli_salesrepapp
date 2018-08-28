@@ -69,8 +69,8 @@ public class PaymentsFragment extends Fragment {
     IssuePaymentAdapter issuePaymentAdapter;
     ArrayList<ClientItem> payed_clients;
     String str_today;
-    boolean init_centers =false;
-    boolean init_groups =false;
+    boolean init_centers =true;
+    boolean init_groups =true;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
