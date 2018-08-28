@@ -1,15 +1,9 @@
 package com.fli.salesagentapp.fliagentapp.utils;
 
 import android.app.ActivityManager;
-<<<<<<< HEAD
 
 import android.app.Dialog;
-=======
-import android.app.AlertDialog;
-import android.app.Application;
->>>>>>> 7791222803c9b4490025a468f30364ad0ce0e5c3
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -48,7 +42,7 @@ public class Utility {
             preferences = PreferenceManager.getDefaultSharedPreferences(context);
             preferences  = context.getSharedPreferences(Constants.FLI_SHARED_PREFS, Context.MODE_PRIVATE);
         }
-            return preferences;
+        return preferences;
     }
 
 
@@ -183,10 +177,9 @@ public class Utility {
     }
 
     public static void stopService(){
-      //  SubmitDataService.stopAsync();
+        //  SubmitDataService.stopAsync();
     }
 
-<<<<<<< HEAD
     public static Dialog change_ServerSettings(final Context context){
         final Dialog dialog = new Dialog(context);
 //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -247,8 +240,5 @@ public class Utility {
         dialog.setCancelable(false);
         return dialog;
     }
-=======
-
->>>>>>> 7791222803c9b4490025a468f30364ad0ce0e5c3
 
 }
