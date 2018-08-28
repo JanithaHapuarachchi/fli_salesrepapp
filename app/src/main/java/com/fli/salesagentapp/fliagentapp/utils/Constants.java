@@ -19,7 +19,12 @@ public class Constants {
     public static final String STAFF_ID ="STAFF_ID";
     public static final String SHOULD_SYNC_AGAIN = "SHOULD_SYNC_AGAIN";
 
-    public static final String MAIN_URL = "https://52.74.229.37:443/fineract-provider/api/v1/";
+
+    public static String SERVER_URL = "SERVER_URL";
+    public static String SERVER_PORT = "SERVER_PORT";
+    public static String SERVER_TENANT = "SERVER_TENANT";
+    public static String MAIN_URL = "https://52.74.229.37:443/fineract-provider/api/v1/";
+
     public static final String AUTHENTICATION_URL = "authentication";
     public static final String LOANS_URL = "loans";
     public static final String ACTIVE_LOANS_URL = " and (l.loan_status_id=300 or l.loan_status_id=602)";
