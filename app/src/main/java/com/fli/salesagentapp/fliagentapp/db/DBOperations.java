@@ -446,6 +446,63 @@ public class DBOperations  extends SQLiteOpenHelper {
         return loan;
     }
 
+    public ArrayList<RecievedLoan> getDetailsforLoanExID(String loanid){
+        ArrayList<RecievedLoan> loanList = new ArrayList<RecievedLoan>();
+        RecievedLoan loan =null;
+        db = this.getReadableDatabase();
+        String countQuery = "SELECT "
+                +TableRecievedLoans.LOAN_ID+","
+                +TableRecievedLoans.LOAN_NAME+","
+                +TableRecievedLoans.LOAN_CLIENT_ID+","
+                +TableRecievedLoans.LOAN_CLIENT_NAME+","
+                +TableRecievedLoans.LOAN_GROUP_ID+","
+                +TableRecievedLoans.LOAN_GROUP_NAME+","
+                +TableRecievedLoans.LOAN_CENTER_ID+","
+                +TableRecievedLoans.LOAN_CENTER_NAME+","
+                +TableRecievedLoans.LOAN_OUT_BALANCE+","
+                +TableRecievedLoans.LOAN_TOTAL_BALANCE+","
+                +TableRecievedLoans.LOAN_RENTAL+","
+                +TableRecievedLoans.LOAN_DEFAULT+","
+                +TableRecievedLoans.LOAN_ARREARS+","
+                +TableRecievedLoans.LOAN_EXTERNALID+","
+                +TableRecievedLoans.LOAN_ACCOUNTNO+","
+                +TableRecievedLoans.LOAN_TYPE
+                +" FROM " + TableRecievedLoans.TABLE_NAME+" WHERE "+TableRecievedLoans.LOAN_EXTERNALID+" =? OR " +TableRecievedLoans.LOAN_ACCOUNTNO+ "=?";//LIKE
+        Cursor cursor = db.rawQuery(countQuery, new String[]{loanid, loanid});//Cursor cursor = db.rawQuery(countQuery, new String[]{loanid+"%"});
+        if(cursor.moveToFirst()){
+            while (!cursor.isAfterLast()) {
+                Log.e("FLI CURSOR LOAN",cursor.toString());
+                loan = new RecievedLoan();
+                loan.loan_id = cursor.getString(0);
+                loan.loan_name = cursor.getString(1);
+                loan.client_id = cursor.getString(2);
+                loan.client_name = cursor.getString(3);
+                loan.group_id = cursor.getString(4);
+                loan.group_name = cursor.getString(5);
+                loan.center_id = cursor.getString(6);
+                loan.center_name = cursor.getString(7);
+                loan.outstanding_balance = cursor.getString(8);
+                loan.total_balance = cursor.getString(9);
+                loan.rental = cursor.getString(10);
+                loan.def = cursor.getString(11);
+                loan.arrears = cursor.getString(12);
+                loan.loan_externalid = cursor.getString(13);
+                loan.loan_accountno = cursor.getString(14);
+                loan.type = cursor.getString(15);
+                loanList.add(loan);
+                Log.e("FLI CURSOR EXT ID",loan.loan_externalid);
+
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        // db.close();
+        // db = null;
+        if(!loanList.isEmpty())
+            Log.e("FLI LOAN",loanList.toString());
+        return loanList;
+    }
+
     public void updateLoanForPaymentLoan(String loanid){
         ContentValues values = new ContentValues();
         db = this.getWritableDatabase();

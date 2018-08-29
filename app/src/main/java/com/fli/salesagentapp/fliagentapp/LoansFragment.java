@@ -1,15 +1,15 @@
 package com.fli.salesagentapp.fliagentapp;
 
-import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +28,7 @@ import com.fli.salesagentapp.fliagentapp.utils.ProgressBarController;
 import com.fli.salesagentapp.fliagentapp.utils.Utility;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -335,8 +336,8 @@ public class LoansFragment extends Fragment {
 
     }*/
 
-    private void populateLoanDetails(RecievedLoan loan){
-        if(loan ==null){
+    private void populateLoanDetails(final ArrayList<RecievedLoan> loanList){
+        if(loanList ==null || loanList.isEmpty()){
             selected_loan = null;
             txt_loan_id.setText("");
             txt_loan_client.setText("");
@@ -349,15 +350,50 @@ public class LoansFragment extends Fragment {
             Utility.showMessage("Loan Details are Not available",getContext());
         }
         else{
-            selected_loan = loan;
-            txt_loan_id.setText(loan.loan_accountno);
-            txt_loan_client.setText(loan.client_name);
-            txt_loan_name.setText(loan.loan_name);
-            txt_loan_totbal.setText(loan.total_balance);
-            txt_loan_totout.setText(loan.outstanding_balance);
-            txt_loan_arrears.setText(loan.arrears);
-            txt_loan_default.setText(loan.def);
-            txt_loan_rental.setText(loan.rental);
+            if(loanList.size() == 1){
+                RecievedLoan loan = loanList.get(0);
+                selected_loan = loan;
+                txt_loan_id.setText(loan.loan_accountno);
+                txt_loan_client.setText(loan.client_name);
+                txt_loan_name.setText(loan.loan_name);
+                txt_loan_totbal.setText(loan.total_balance);
+                txt_loan_totout.setText(loan.outstanding_balance);
+                txt_loan_arrears.setText(loan.arrears);
+                txt_loan_default.setText(loan.def);
+                txt_loan_rental.setText(loan.rental);
+            }else{
+
+                String[] items = new String[loanList.size()];
+                int index = 0;
+                for (RecievedLoan value : loanList) {
+                    items[index] = (String) value.loan_accountno;
+                    index++;
+                }
+
+                final AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
+                adb.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface d, int n) {
+                        RecievedLoan loan = loanList.get(n);
+                        selected_loan = loan;
+                        txt_loan_id.setText(loan.loan_accountno);
+                        txt_loan_client.setText(loan.client_name);
+                        txt_loan_name.setText(loan.loan_name);
+                        txt_loan_totbal.setText(loan.total_balance);
+                        txt_loan_totout.setText(loan.outstanding_balance);
+                        txt_loan_arrears.setText(loan.arrears);
+                        txt_loan_default.setText(loan.def);
+                        txt_loan_rental.setText(loan.rental);
+                        d.dismiss();
+                    }
+
+                });
+                adb.setNegativeButton("Cancel", null);
+                adb.setTitle("Please select a loan");
+                adb.show();
+            }
+
         }
     }
 
@@ -401,7 +437,7 @@ public class LoansFragment extends Fragment {
         }
     }
 
-    class LoadLoanData extends AsyncTask<String,Void,RecievedLoan>{
+    class LoadLoanData extends AsyncTask<String,Void,ArrayList<RecievedLoan>>{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -409,7 +445,7 @@ public class LoansFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(RecievedLoan loan) {
+        protected void onPostExecute(ArrayList<RecievedLoan> loan) {
             super.onPostExecute(loan);
             prgController.hideProgressBar();
             populateLoanDetails(loan);
@@ -418,8 +454,8 @@ public class LoansFragment extends Fragment {
         }
 
         @Override
-        protected RecievedLoan doInBackground(String... params) {
-            return dmManager.getDetailsforLoanNumber(params[0]);
+        protected ArrayList<RecievedLoan> doInBackground(String... params) {
+            return dmManager.getDetailsforLoanEXID(params[0]);
         }
     }
 

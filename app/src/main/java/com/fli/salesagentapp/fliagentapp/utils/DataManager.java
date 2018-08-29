@@ -33,6 +33,10 @@ public class DataManager {
         return dbOperations.getDetailsforLoanNumber(loannumber);
     }
 
+    public ArrayList<RecievedLoan> getDetailsforLoanEXID(String loanid){
+        return dbOperations.getDetailsforLoanExID(loanid);
+    }
+
     public ClientPaymentsInfo getAvailablePayments(){
         return dbOperations.getAvailablePayments();
     }
