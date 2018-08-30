@@ -79,7 +79,7 @@ public class MainMenu extends AppCompatActivity {
                 else if(position ==3){
                     startActivity(new Intent(getApplicationContext(),FragmentMainMenu.class).putExtra("FRAGMENT_NO", position));
                 }
-               // finish();
+              finish();
             }
         });
 
