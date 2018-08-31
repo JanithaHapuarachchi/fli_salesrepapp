@@ -136,6 +136,14 @@ public class Utility {
         return preferences.getString(Constants.USER_ID, "");
     }
 
+    public static boolean clearAuthKey(Context context){
+        SharedPreferences preferences =  getSharedPrefs(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Constants.AUTHENTICATION_KEY,"");
+        editor.commit();
+        return true;
+    }
+
     public static String getAuthKey(Context context){
         SharedPreferences preferences =  getSharedPrefs(context);
         return preferences.getString(Constants.AUTHENTICATION_KEY, "");

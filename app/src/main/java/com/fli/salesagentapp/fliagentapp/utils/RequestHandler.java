@@ -95,7 +95,15 @@ public class RequestHandler {
         sc = SSLContext.getInstance("TLS");
         String responseString ="";
         Constants.MAIN_URL = Utility.getServerURL(context)+":"+Utility.getServerPORT(context)+"/fineract-provider/api/v1/";
-        String completeurl = Constants.MAIN_URL+methodname;
+        String completeurl;
+        completeurl = Constants.MAIN_URL+methodname;
+//        if(methodname.equals(Constants.AUTHENTICATION_URL)){
+//            completeurl = Constants.MAIN_URL+methodname+"?username="+postobject.getString("username")+"&password="+postobject.getString("password");
+//        }
+//        else{
+//             completeurl = Constants.MAIN_URL+methodname;
+//        }
+
         Log.e("URL POST",completeurl);
         URL obj = new URL(completeurl);
 
@@ -110,6 +118,7 @@ public class RequestHandler {
         con.setRequestProperty("Fineract-Platform-TenantId",Utility.getServerTenant(context));
         if(!Utility.getAuthKey(context).equals("")){
         con.setRequestProperty  ("Authorization", "Basic " + Utility.getAuthKey(context));
+            Log.e("AUTH","BASIC");
         }
         con.connect();
 

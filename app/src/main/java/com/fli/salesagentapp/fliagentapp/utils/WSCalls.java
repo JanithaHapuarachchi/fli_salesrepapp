@@ -37,9 +37,14 @@ public class WSCalls {
 
         ResObject res_object = new ResObject();
         String response;
-        String request  =  Constants.AUTHENTICATION_URL+"?username="+username+"&password="+password;
+       String request  =  Constants.AUTHENTICATION_URL+"?username="+username+"&password="+password;
+      //  String request  =  Constants.AUTHENTICATION_URL;
+        JSONObject req = new JSONObject();
         try {
+            req.put("username",username);
+            req.put("password",password);
             if(Utility.isConnected(context)) {
+                Utility.clearAuthKey(context);
                 response = RequestHandler.sendPost(new JSONObject(), request, context);
                 res_object.validity = Constants.VALIDITY_SUCCESS;
                 res_object.msg = response;
