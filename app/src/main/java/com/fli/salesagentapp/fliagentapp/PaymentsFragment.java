@@ -467,8 +467,12 @@ public class PaymentsFragment extends Fragment {
             centerGroups.remove(selected_center.id);
             centers.remove(pos_selectedcenter);
             initialCenters.remove(pos_selectedcenter);
+            spinner_center_names.setAdapter(new PaymentLoadCentersAdapter(getContext(),centers));
         }
-        spinner_center_names.setAdapter(new PaymentLoadCentersAdapter(getContext(),centers));
+        else{
+            center_groups.setAdapter(new PaymentLoadGroupsAdapter(getContext(),groups));
+        }
+
         Toast.makeText(getContext(),"Payment Successful",Toast.LENGTH_LONG).show();
     }
 
