@@ -37,7 +37,7 @@ public class IssuePaymentAdapter extends BaseAdapter {
     double initial_total_payment = 0 ;
 
     static class ViewHolder {
-        TextView txt_id,txt_name,txt_payment_due;
+        TextView txt_id,txt_name,txt_payment_due,txt_rental,txt_outstanding;
         EditText txt_payment;
         int no;
     }
@@ -104,6 +104,8 @@ public class IssuePaymentAdapter extends BaseAdapter {
             holder.txt_name=  (TextView)v.findViewById(R.id.txt_name);//(R.id.txt_name, v.findViewById(R.id.txt_name));
             holder.txt_payment =  (EditText) v.findViewById(R.id.txt_payment); //(R.id.txt_payment, v.findViewById(R.id.txt_payment));
             holder.txt_payment_due =  (TextView)v.findViewById(R.id.txt_payment_due); //(R.id.txt_payment_due, v.findViewById(R.id.txt_payment_due));
+            holder.txt_rental =  (TextView)v.findViewById(R.id.txt_rental);
+            holder.txt_outstanding =  (TextView)v.findViewById(R.id.txt_outstanding);
             //holder.txt_payment.setTag(position);
             v.setTag(holder);
         }
@@ -126,6 +128,8 @@ public class IssuePaymentAdapter extends BaseAdapter {
        // holder.txt_payment.setTag(position);
       //  holder.txt_payment_due.setText(item.payment_due);
         holder.txt_payment_due.setText(item.rental);
+
+        holder.txt_rental.setText("Rental : " + item.rental);
         holder.no = position;
 
         total += Double.parseDouble(item.def.trim());
