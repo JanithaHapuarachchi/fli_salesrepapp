@@ -487,7 +487,7 @@ public class PaymentsFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             prgController.hideProgressBar();
-            removeGroupFromLists();
+            //removeGroupFromLists();
         }
 
         @Override

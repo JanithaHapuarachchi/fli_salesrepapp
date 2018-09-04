@@ -561,8 +561,10 @@ public class DBOperations  extends SQLiteOpenHelper {
 
         db.setTransactionSuccessful();
         db.endTransaction();
-        if (clients.size() > 0)
-            updateLoanForGroupPayment(payment.group_id);
+//        if (clients.size() > 0)
+//            updateLoanForGroupPayment(payment.group_id);
+
+
         //db.close();
         //db = null;
     }
