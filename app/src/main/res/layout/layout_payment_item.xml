@@ -11,13 +11,30 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/txt_id"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:textColor="@color/app_text_color"
-            android:textStyle="bold" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/app_text_color"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_rental"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0.5"
+                android:textColor="@color/app_text_color"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/txt_name"
@@ -40,6 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:layout_marginLeft="5dp"
             android:background="@drawable/round_border_min_edge_textbox"
             android:inputType="number"
             android:padding="5dp"
@@ -47,14 +65,32 @@
             android:textColor="@color/app_textbox_text_color"
             android:textColorHint="@color/app_textbox_hint_color" />
 
-        <TextView
-            android:id="@+id/txt_payment_due"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:textColor="@color/app_text_color"
-            android:textColorHint="@color/app_textbox_hint_color" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_outstanding"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="0.5"
+                android:textColor="@color/app_text_color"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_payment_due"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="0.5"
+                android:textColor="@color/app_text_color"
+                android:textColorHint="@color/app_textbox_hint_color" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

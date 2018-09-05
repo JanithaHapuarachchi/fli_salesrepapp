@@ -145,7 +145,8 @@ public class DBOperations  extends SQLiteOpenHelper {
                     + TableRecievedLoans.LOAN_NAME + ","
                     + TableRecievedLoans.LOAN_DEFAULT + ","
                     + TableRecievedLoans.LOAN_RENTAL + ","
-                    + TableRecievedLoans.LOAN_ARREARS
+                    + TableRecievedLoans.LOAN_ARREARS + ","
+                    + TableRecievedLoans.LOAN_OUT_BALANCE
                     + " FROM " + TableRecievedLoans.TABLE_NAME + " WHERE " + TableRecievedLoans.LOAN_GROUP_ID + " =? AND " + TableRecievedLoans.LOAN_TYPE + " =? AND " + TableRecievedLoans.MARKED_PAYMENT + " =?";
         }
         else{
@@ -157,7 +158,8 @@ public class DBOperations  extends SQLiteOpenHelper {
                     + TableRecievedLoans.LOAN_NAME + ","
                     + TableRecievedLoans.LOAN_DEFAULT + ","
                     + TableRecievedLoans.LOAN_RENTAL + ","
-                    + TableRecievedLoans.LOAN_ARREARS
+                    + TableRecievedLoans.LOAN_ARREARS + ","
+                    + TableRecievedLoans.LOAN_OUT_BALANCE
                     + " FROM " + TableRecievedLoans.TABLE_NAME + " WHERE " + TableRecievedLoans.LOAN_GROUP_ID + " =? AND " + TableRecievedLoans.LOAN_TYPE + " =? AND " + TableRecievedLoans.MARKED_ATTENDANCE + " =?";
 
         }
@@ -174,6 +176,8 @@ public class DBOperations  extends SQLiteOpenHelper {
             client.def = cursor.getString(5);
             client.rental = cursor.getString(6);
             client.arrears = cursor.getString(7);
+            client.outstanding = cursor.getString(8);
+
             clients.add(client);
             }while (cursor.moveToNext());
         }
