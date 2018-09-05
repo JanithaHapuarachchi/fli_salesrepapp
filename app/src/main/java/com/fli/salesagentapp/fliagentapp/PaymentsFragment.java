@@ -447,7 +447,7 @@ public class PaymentsFragment extends Fragment {
             initialCenters = centers;
             centerGroups = info.centergroups;
             allgroups = info.groups;
-            groupClients = info.groupclients;
+            groupClients = (HashMap<String, ArrayList<ClientItem>>) info.groupclients.clone();
             spinner_center_names.setAdapter(new PaymentLoadCentersAdapter(getContext(),centers));
             setGroupsforCenter(null);
             Log.e("FLI CENTERS",centers.toString());
@@ -455,6 +455,21 @@ public class PaymentsFragment extends Fragment {
             Log.e("FLI GROUPS",allgroups.toString());
             Log.e("FLI GROUP CLIENTS",groupClients.toString());
         }
+    }
+
+    private void refreshGroup(){
+        groups =  centerGroups.get(selected_center.id);
+        int pos_selectedgroup = groups.indexOf(selected_group);
+        groups  =info.centergroups.get(selected_center.id);
+        Log.e("FLI",selected_group.toString());
+        selected_group.total_def = Double.parseDouble(pay_total.getText().toString());
+        groups.add(pos_selectedgroup,selected_group);
+        pay_total.setText(""+selected_group.total_def);
+        issuePaymentAdapter = new IssuePaymentAdapter(getContext(),groupClients.get(selected_group.id),pay_total,selected_group.total_def);
+        center_payees.setAdapter(issuePaymentAdapter);
+
+        //populate_group_payments(pos_selectedgroup);
+        Toast.makeText(getContext(),"Payment Successful",Toast.LENGTH_SHORT).show();
     }
 
     private void removeGroupFromLists(){
@@ -488,6 +503,7 @@ public class PaymentsFragment extends Fragment {
             super.onPostExecute(aVoid);
             prgController.hideProgressBar();
             //removeGroupFromLists();
+            refreshGroup();
         }
 
         @Override
