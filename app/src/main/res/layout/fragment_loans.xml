@@ -44,7 +44,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.2"
                         android:background="@drawable/round_border_min_edge_textbox"
-                        android:hint="Loan Account No./ External ID"
+                        android:hint="Loan Account No./ NIC"
                         android:padding="10dp"
                         android:textColor="@color/app_textbox_text_color"
                         android:textColorHint="@color/app_textbox_hint_color"

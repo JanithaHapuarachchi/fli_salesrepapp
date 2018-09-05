@@ -127,7 +127,8 @@ public class IssuePaymentAdapter extends BaseAdapter {
         holder.txt_payment.setSelection(holder.txt_payment.getText().length());
        // holder.txt_payment.setTag(position);
       //  holder.txt_payment_due.setText(item.payment_due);
-        holder.txt_payment_due.setText(item.rental);
+        holder.txt_outstanding.setText("Ostdg : " + item.outstanding);
+        holder.txt_payment_due.setText("Arr : " + item.arrears);
 
         holder.txt_rental.setText("Rental : " + item.rental);
         holder.no = position;

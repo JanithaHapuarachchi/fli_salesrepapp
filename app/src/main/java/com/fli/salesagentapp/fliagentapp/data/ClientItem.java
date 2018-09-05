@@ -16,12 +16,13 @@ public class ClientItem {
     public String def;
     public String rental;
     public String arrears;
+    public String outstanding;
     public ArrayList<AttendanceItem> attends =new ArrayList<AttendanceItem>();
     public int attendancetype = 1;
 
 
     @Override
     public String toString() {
-        return "id: "+id+", name :"+name+", def :"+def+", attendance :"+attendancetype;
+        return "id: "+id+", name :"+name+", def :"+def+", attendance :"+attendancetype + ", outstanding :"+outstanding;
     }
 }

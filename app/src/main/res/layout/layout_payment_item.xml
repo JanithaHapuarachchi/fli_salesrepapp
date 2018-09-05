@@ -22,6 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
+                android:layout_marginLeft="5dp"
                 android:textColor="@color/app_text_color"
                 android:textStyle="bold" />
 
@@ -29,6 +30,7 @@
                 android:id="@+id/txt_rental"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:layout_weight="0.5"
                 android:textColor="@color/app_text_color"
                 android:textStyle="bold" />
@@ -55,6 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:layout_marginLeft="5dp"
             android:background="@drawable/round_border_min_edge_textbox"
             android:inputType="number"
             android:padding="5dp"
@@ -72,6 +75,7 @@
                 android:id="@+id/txt_outstanding"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="0.5"
                 android:textColor="@color/app_text_color"
                 android:textStyle="bold" />
