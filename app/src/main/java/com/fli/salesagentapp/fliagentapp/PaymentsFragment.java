@@ -288,6 +288,7 @@ public class PaymentsFragment extends Fragment {
 //    }
 
     private void populate_group_payments(int group_index){
+
         selected_group =groups.get(group_index);
         pay_total.setText(""+selected_group.total_def);
       //  IssuePaymentAdapter issuePaymentAdapter = new IssuePaymentAdapter(getContext(),selected_group.payees,pay_total);
@@ -463,7 +464,7 @@ public class PaymentsFragment extends Fragment {
         groups  =info.centergroups.get(selected_center.id);
         Log.e("FLI",selected_group.toString());
         selected_group.total_def = Double.parseDouble(pay_total.getText().toString());
-        groups.add(pos_selectedgroup,selected_group);
+        groups.set(pos_selectedgroup,selected_group);
         pay_total.setText(""+selected_group.total_def);
         issuePaymentAdapter = new IssuePaymentAdapter(getContext(),groupClients.get(selected_group.id),pay_total,selected_group.total_def);
         center_payees.setAdapter(issuePaymentAdapter);

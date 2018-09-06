@@ -11,6 +11,7 @@ public class CenterItem {
     public int no_of_loans;
     public double total_collection;
     public int pending_sync_count;
+    public int recipt_count;
 
     @Override
     public String toString() {

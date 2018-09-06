@@ -146,7 +146,8 @@ public class DBOperations  extends SQLiteOpenHelper {
                     + TableRecievedLoans.LOAN_DEFAULT + ","
                     + TableRecievedLoans.LOAN_RENTAL + ","
                     + TableRecievedLoans.LOAN_ARREARS + ","
-                    + TableRecievedLoans.LOAN_OUT_BALANCE
+                    + TableRecievedLoans.LOAN_OUT_BALANCE+ ","
+                    + TableRecievedLoans.LOAN_ACCOUNTNO
                     + " FROM " + TableRecievedLoans.TABLE_NAME + " WHERE " + TableRecievedLoans.LOAN_GROUP_ID + " =? AND " + TableRecievedLoans.LOAN_TYPE + " =? AND " + TableRecievedLoans.MARKED_PAYMENT + " =?";
         }
         else{
@@ -159,7 +160,8 @@ public class DBOperations  extends SQLiteOpenHelper {
                     + TableRecievedLoans.LOAN_DEFAULT + ","
                     + TableRecievedLoans.LOAN_RENTAL + ","
                     + TableRecievedLoans.LOAN_ARREARS + ","
-                    + TableRecievedLoans.LOAN_OUT_BALANCE
+                    + TableRecievedLoans.LOAN_OUT_BALANCE+ ","
+                    + TableRecievedLoans.LOAN_ACCOUNTNO
                     + " FROM " + TableRecievedLoans.TABLE_NAME + " WHERE " + TableRecievedLoans.LOAN_GROUP_ID + " =? AND " + TableRecievedLoans.LOAN_TYPE + " =? AND " + TableRecievedLoans.MARKED_ATTENDANCE + " =?";
 
         }
@@ -177,7 +179,7 @@ public class DBOperations  extends SQLiteOpenHelper {
             client.rental = cursor.getString(6);
             client.arrears = cursor.getString(7);
             client.outstanding = cursor.getString(8);
-
+            client.loanno = cursor.getString(9);
             clients.add(client);
             }while (cursor.moveToNext());
         }
@@ -345,12 +347,25 @@ public class DBOperations  extends SQLiteOpenHelper {
         return center_name;
     }
 
+
+    public int getreciptCount(String center_id){
+        int count = 0;
+        String countQuery = "SELECT COUNT("
+                +TableLoanTransactions.DEPOSIT_LOAN_ID+") AS pendingsynccount"
+                +" FROM " + TableLoanTransactions.TABLE_NAME+"  WHERE "+TableLoanTransactions.DEPOSIT_CENTER_ID+" =?  AND "+TableLoanTransactions.DEPOSIT_SYNCED+" =? ";
+        Cursor cursor = db.rawQuery(countQuery, new String[]{center_id,Constants.SYCED_NOT});
+        if(cursor.moveToFirst()){
+            count = cursor.getInt(0);
+        }
+        return count;
+    }
+
     public int getPendingSyncCount(String center_id){
         int count = 0;
         String countQuery = "SELECT COUNT("
                 +TableLoanTransactions.DEPOSIT_LOAN_ID+") AS pendingsynccount"
-                +" FROM " + TableLoanTransactions.TABLE_NAME+"  WHERE "+TableLoanTransactions.DEPOSIT_CENTER_ID+" =?  AND "+TableLoanTransactions.DEPOSIT_SYNCED+" =?";
-        Cursor cursor = db.rawQuery(countQuery, new String[]{center_id,Constants.SYCED_NOT});
+                +" FROM " + TableLoanTransactions.TABLE_NAME+"  WHERE "+TableLoanTransactions.DEPOSIT_CENTER_ID+" =?  AND "+TableLoanTransactions.DEPOSIT_SYNCED+" =? AND "+TableLoanTransactions.DEPOSIT_AMOUNT+" >?";
+        Cursor cursor = db.rawQuery(countQuery, new String[]{center_id,Constants.SYCED_NOT,"0"});
         if(cursor.moveToFirst()){
             count = cursor.getInt(0);
         }
@@ -362,8 +377,8 @@ public class DBOperations  extends SQLiteOpenHelper {
         db = this.getReadableDatabase();
         String countQuery = "SELECT COUNT("
                 +TableLoanTransactions.DEPOSIT_LOAN_ID+") AS pendingsynccount"
-                +" FROM " + TableLoanTransactions.TABLE_NAME+"  WHERE "+TableLoanTransactions.DEPOSIT_SYNCED+" = ? ";
-                Cursor cursor = db.rawQuery(countQuery, new String[]{Constants.SYCED_NOT});
+                +" FROM " + TableLoanTransactions.TABLE_NAME+"  WHERE "+TableLoanTransactions.DEPOSIT_SYNCED+" = ? AND "+TableLoanTransactions.DEPOSIT_AMOUNT+" > ?";
+                Cursor cursor = db.rawQuery(countQuery, new String[]{Constants.SYCED_NOT,"0"});
         if(cursor.moveToFirst()){
             count = cursor.getInt(0);
         }
@@ -390,6 +405,7 @@ public class DBOperations  extends SQLiteOpenHelper {
                 center.id = cursor.getString(2);
                 center.name = getCenterNameforId(center.id);
                 center.pending_sync_count = getPendingSyncCount(center.id);
+                center.recipt_count = getreciptCount(center.id);
                 centers.add(center);
             } while (cursor.moveToNext());
         }
@@ -471,8 +487,8 @@ public class DBOperations  extends SQLiteOpenHelper {
                 +TableRecievedLoans.LOAN_EXTERNALID+","
                 +TableRecievedLoans.LOAN_ACCOUNTNO+","
                 +TableRecievedLoans.LOAN_TYPE
-                +" FROM " + TableRecievedLoans.TABLE_NAME+" WHERE "+TableRecievedLoans.LOAN_EXTERNALID+" =? OR " +TableRecievedLoans.LOAN_ACCOUNTNO+ "=?";//LIKE
-        Cursor cursor = db.rawQuery(countQuery, new String[]{loanid, loanid});//Cursor cursor = db.rawQuery(countQuery, new String[]{loanid+"%"});
+                +" FROM " + TableRecievedLoans.TABLE_NAME+" WHERE "+TableRecievedLoans.LOAN_EXTERNALID+" =? OR " +TableRecievedLoans.LOAN_ACCOUNTNO+ "=? OR "+TableRecievedLoans.LOAN_ID+" =?";//LIKE
+        Cursor cursor = db.rawQuery(countQuery, new String[]{loanid, loanid,loanid});//Cursor cursor = db.rawQuery(countQuery, new String[]{loanid+"%"});
         if(cursor.moveToFirst()){
             while (!cursor.isAfterLast()) {
                 Log.e("FLI CURSOR LOAN",cursor.toString());
@@ -655,8 +671,8 @@ public class DBOperations  extends SQLiteOpenHelper {
                 + TableLoanTransactions.DEPOSIT_AMOUNT + ","
                 + TableLoanTransactions.DEPOSIT_NOTE+ ","
                 + TableLoanTransactions.DEPOSIT_TIME
-                + " FROM " + TableLoanTransactions.TABLE_NAME+" WHERE "+TableLoanTransactions.DEPOSIT_SYNCED+" = ?";
-        Cursor cursor = db.rawQuery(countQuery,new String[]{Constants.SYCED_NOT});
+                + " FROM " + TableLoanTransactions.TABLE_NAME+" WHERE "+TableLoanTransactions.DEPOSIT_SYNCED+" = ? AND "+TableLoanTransactions.DEPOSIT_AMOUNT+" > ?";
+        Cursor cursor = db.rawQuery(countQuery,new String[]{Constants.SYCED_NOT,"0"});
         //Cursor cursor =  db.query(TableRecievedLoans.TABLE_NAME,new String[]{TableRecievedLoans.LOAN_CENTER_ID,TableRecievedLoans.LOAN_CENTER_NAME}, null,null,null,null,null,null);
         Log.e("FLI CUR COUNT",""+cursor.getCount());
         //  cursor.moveToFirst();

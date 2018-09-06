@@ -35,19 +35,21 @@ public class CollectionAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, View view,  ViewGroup viewGroup) {
         View v = view;
-        TextView center_name,no_of_loans,total_collection,pending_sync;
+        TextView center_name,no_of_loans,total_collection,pending_sync,recipts;
         if (v == null) {
             v = mInflater.inflate(R.layout.layout_collection_item, viewGroup, false);
             v.setTag(R.id.center_name, v.findViewById(R.id.center_name));
             v.setTag(R.id.no_of_loans, v.findViewById(R.id.no_of_loans));
             v.setTag(R.id.total_collection, v.findViewById(R.id.total_collection));
             v.setTag(R.id.pending_sync, v.findViewById(R.id.pending_sync));
+            v.setTag(R.id.recipts, v.findViewById(R.id.recipts));
+
         }
         center_name = (TextView) v.getTag(R.id.center_name);
         no_of_loans = (TextView) v.getTag(R.id.no_of_loans);
         total_collection = (TextView) v.getTag(R.id.total_collection);
         pending_sync = (TextView) v.getTag(R.id.pending_sync);
-
+        recipts = (TextView)v.getTag(R.id.recipts);
 //        CollectionItem item = items.get(position);
 //        center_name.setText(item.center_name);
 //        no_of_loans.setText(item.no_of_loans);
@@ -59,7 +61,7 @@ public class CollectionAdapter extends ArrayAdapter {
         no_of_loans.setText(String.valueOf(item.no_of_loans));
         total_collection.setText(String.valueOf(item.total_collection));
         pending_sync.setText(String.valueOf(item.pending_sync_count));
-
+        recipts.setText(String.valueOf(item.recipt_count));
         return v;
     }
 }

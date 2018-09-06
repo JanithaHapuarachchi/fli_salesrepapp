@@ -120,7 +120,7 @@ public class IssuePaymentAdapter extends BaseAdapter {
         final ClientItem item = clientItems.get(position);
         Log.e("FLI def",item.toString());
        // holder.txt_id.setText(String.valueOf(item.id));
-        holder.txt_id.setText(String.valueOf(item.loanid));
+        holder.txt_id.setText(String.valueOf(item.loanno));
         holder.txt_name.setText(item.name);
       //  holder.txt_payment.setText(item.payment);
         holder.txt_payment.setText(item.def);

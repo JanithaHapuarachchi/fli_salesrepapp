@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class ClientItem {
 
     public String id;
+    public String loanno;
     public String name;
     public String externalid;
     public String loanid;
