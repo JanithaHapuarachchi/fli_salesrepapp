@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.fli.salesagentapp.fliagentapp.adapters.CollectionAdapter;
 import com.fli.salesagentapp.fliagentapp.data.CenterItem;
@@ -36,6 +37,7 @@ public class CollectionsFragment extends Fragment {
     ArrayList<CenterItem> centers;
     DataManager dmManager;
     ProgressBarController prgController;
+    TextView txt_total_collection;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -84,7 +86,7 @@ public class CollectionsFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_collections, container, false);
 
         list_collections = (ListView)view.findViewById(R.id.list_collections);
-
+        txt_total_collection = (TextView)view.findViewById(R.id.txt_total_collection);
         dmManager = new DataManager(getContext());
         prgController = new ProgressBarController(getActivity());
 
@@ -146,6 +148,16 @@ public class CollectionsFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    public void set_totalCollection(){
+        double tot = 0.00;
+        CenterItem item;
+        for(int i=0; i< centers.size();i++){
+            item = centers.get(i);
+            tot += item.total_collection;
+        }
+        txt_total_collection.setText("Total Collection: "+String.valueOf(tot));
+    }
+
     class LoadCollectionSheet extends AsyncTask <Void,Void,Void>{
         @Override
         protected void onPreExecute() {
@@ -166,11 +178,12 @@ public class CollectionsFragment extends Fragment {
             else{
                 Utility.showMessage("No Collection Data",getContext());
             }
+            set_totalCollection();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-
+            centers = new ArrayList<>();
             centers = dmManager.getCollectionSheet();
             return null;
         }

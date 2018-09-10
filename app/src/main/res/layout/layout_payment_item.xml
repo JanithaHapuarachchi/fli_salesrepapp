@@ -57,6 +57,7 @@
         android:orientation="horizontal">
 
         <EditText
+            android:focusableInTouchMode="true"
             android:id="@+id/txt_payment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
