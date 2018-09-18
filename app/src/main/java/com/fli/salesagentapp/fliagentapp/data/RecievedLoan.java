@@ -23,6 +23,7 @@ public class RecievedLoan {
     public String def;
     public String rental;
     public String type;
+    public Boolean arrearsFlag;
 
 
     @Override

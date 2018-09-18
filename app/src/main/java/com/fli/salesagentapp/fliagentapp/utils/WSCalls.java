@@ -17,7 +17,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * Created by janithamh on 8/12/18.
@@ -64,6 +66,13 @@ public class WSCalls {
     }
 
     public RecievedLoan get_loan_associations(RecievedLoan loan) throws Exception{
+
+        Calendar calendar = Calendar.getInstance();
+
+        int currentYear =  calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH)+1;
+        int currentDate = calendar.get(Calendar.DATE);
+
         int periodCheckNo =1;
         double rental = 0.00;
         String request,response ;
@@ -77,6 +86,20 @@ public class WSCalls {
         transactionJSON = resJSON.getJSONArray("transactions");
         rental= periodsJSON.getJSONObject(periodCheckNo).getDouble("principalDue")+periodsJSON.getJSONObject(periodCheckNo).getDouble("interestDue");
         loan.rental = String.valueOf(rental);
+
+        for(int j = 0 ; j < periodsJSON.length() ; j++) {
+            JSONObject period = periodsJSON.getJSONObject(j);
+
+            JSONArray periodDueDate = period.getJSONArray("dueDate");
+
+            if (currentYear == periodDueDate.getInt(0) && currentMonth == periodDueDate.getInt(1) && currentDate == periodDueDate.getInt(2)) {
+                loan.arrearsFlag = true;
+                break;
+            } else {
+                loan.arrearsFlag = false;
+            }
+        }
+
         if(transactionJSON ==null || transactionJSON.length()==0){
             loan.def =  String.valueOf(rental);
         }
@@ -193,24 +216,25 @@ public class WSCalls {
         JSONObject res,group,summary,loanType;
         ArrayList<RecievedLoan> resloans = new ArrayList<RecievedLoan>();
         RecievedLoan loan;
+
         for(int i=0; i< recieved.length();i++){
            // try {
             res= recieved.getJSONObject(i);
             loan = new RecievedLoan();
-           Log.e("FLI Res ",res.toString());
+            Log.e("FLI Res ",res.toString());
             loan.loan_id = String.valueOf(res.getLong("id"));
             loan.loan_name = res.getString("loanProductName");
             loan.loan_accountno =  res.getString("accountNo");
+
             if(Utility.isJSONKeyAvailable(res,"externalId")) {
                 loan.loan_externalid = res.getString("externalId");
-            }
-            else{
+            }else{
                 loan.loan_externalid ="";
             }
+
             if(Utility.isJSONKeyAvailable(res,"group")) {
                 group = res.getJSONObject("group");
-            }
-            else{
+            }else{
                 group = new JSONObject();
             }
 
@@ -237,7 +261,16 @@ public class WSCalls {
             loan.arrears =  String.valueOf(summary.getDouble("totalOverdue"));
 
             loan = get_loan_associations(loan);
+
+            if(loan.arrearsFlag){
+                Double tmpArrears = Double.valueOf(loan.arrears);
+                tmpArrears += Double.valueOf(loan.rental);
+                loan.arrears =  String.valueOf(tmpArrears);
+            }
+
             resloans.add(loan);
+
+
          //   } catch (Exception e) {
          //       Log.e("FLI LOAN RES",e.getMessage());
          //       e.printStackTrace();
