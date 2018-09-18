@@ -33,7 +33,7 @@
             android:id="@+id/spinner_today_attendace"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_weight="0.8"
+            android:layout_weight="0.5"
             android:background="@drawable/rounded_border_white"
             android:clickable="true"
             android:ems="20"
@@ -64,7 +64,7 @@
             android:textColor="@color/app_text_color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2"
+            android:layout_weight="0.5"
             />
     </LinearLayout>
 

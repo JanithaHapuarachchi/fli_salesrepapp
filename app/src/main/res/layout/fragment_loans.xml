@@ -136,7 +136,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.4"
-                        android:text="Loan"
+                        android:text="Product"
                         android:textColor="@color/app_text_color"
                         android:textSize="15dp"
                         android:textStyle="bold" />
@@ -256,7 +256,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.4"
-                        android:text="Default"
+                        android:text="Last Pay."
                         android:textColor="@color/app_text_color"
                         android:textSize="15dp"
                         android:textStyle="bold" />

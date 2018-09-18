@@ -1,6 +1,7 @@
 package com.fli.salesagentapp.fliagentapp.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -124,6 +125,21 @@ public class IssuePaymentAdapter extends BaseAdapter {
         holder.txt_name.setText(item.name);
       //  holder.txt_payment.setText(item.payment);
         holder.txt_payment.setText(item.def);
+        if(item.isPayedBefore){
+            if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                holder.txt_payment.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.round_border_min_edge_alttextbox) );
+            } else {
+                holder.txt_payment.setBackground(ContextCompat.getDrawable(context, R.drawable.round_border_min_edge_alttextbox));
+            }
+
+        }
+        else{
+            if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                holder.txt_payment.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.round_border_min_edge_textbox) );
+            } else {
+                holder.txt_payment.setBackground(ContextCompat.getDrawable(context, R.drawable.round_border_min_edge_textbox));
+            }
+        }
         holder.txt_payment.setSelection(holder.txt_payment.getText().length());
        // holder.txt_payment.setTag(position);
       //  holder.txt_payment_due.setText(item.payment_due);

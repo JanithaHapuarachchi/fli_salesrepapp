@@ -60,7 +60,7 @@
             android:focusableInTouchMode="true"
             android:id="@+id/txt_payment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:layout_marginLeft="5dp"
             android:background="@drawable/round_border_min_edge_textbox"

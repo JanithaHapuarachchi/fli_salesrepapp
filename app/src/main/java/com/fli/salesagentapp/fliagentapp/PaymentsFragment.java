@@ -458,12 +458,27 @@ public class PaymentsFragment extends Fragment {
         }
     }
 
+    private void changePayedBefrore(){
+        ArrayList<ClientItem> clientItems = selected_group.clients;
+        ClientItem clientItem;
+        for(int i=0;i<clientItems.size();i++){
+            clientItem = clientItems.get(i);
+            if(Double.valueOf(clientItem.def)> 0.00){
+                clientItem.isPayedBefore =true;
+                clientItems.set(i,clientItem);
+            }
+        }
+        selected_group.clients = clientItems;
+    }
+
     private void refreshGroup(){
         groups =  centerGroups.get(selected_center.id);
         int pos_selectedgroup = groups.indexOf(selected_group);
         groups  =info.centergroups.get(selected_center.id);
-        Log.e("FLI",selected_group.toString());
+        Log.e("FLI",selected_group.clients.toString());
+
         selected_group.total_def = Double.parseDouble(pay_total.getText().toString());
+        changePayedBefrore();
         groups.set(pos_selectedgroup,selected_group);
         pay_total.setText(""+selected_group.total_def);
         issuePaymentAdapter = new IssuePaymentAdapter(getContext(),groupClients.get(selected_group.id),pay_total,selected_group.total_def);

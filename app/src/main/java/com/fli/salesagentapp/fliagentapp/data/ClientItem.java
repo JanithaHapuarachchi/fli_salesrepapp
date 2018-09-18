@@ -20,6 +20,7 @@ public class ClientItem {
     public String outstanding;
     public ArrayList<AttendanceItem> attends =new ArrayList<AttendanceItem>();
     public int attendancetype = 1;
+    public boolean isPayedBefore = false;
 
 
     @Override

@@ -5,10 +5,10 @@
     <string name="title_collections">Collections</string>
     <string name="title_attendance">Attendance</string>
     <string-array name="attendance_types">
-        <item>P</item>
-        <item>A</item>
-        <item>L</item>
-        <item>E</item>
+        <item>Present</item>
+        <item>Absent</item>
+        <item>Leave</item>
+        <item>Late</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->

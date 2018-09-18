@@ -8,7 +8,7 @@ import java.text.DecimalFormat;
 
 public class Constants {
 
-    public static final String[] ATTENDANCE_TYPES = {"P","A","L","E"};
+    public static final String[] ATTENDANCE_TYPES = {"Present","Absent","Leave","Late"};
     public static final String LAST_LOGGED_DATE = "LAST_LOGGED_DATE";
     public static final String USER_NAME = "USER_NAME";
     public static final String USER_PASSWORD = "USER_PASSWORD";

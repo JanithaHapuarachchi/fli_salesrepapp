@@ -104,6 +104,7 @@ public class DBOperations  extends SQLiteOpenHelper {
         for(int j=0; j<groups.size();j++){
             groupItem = groups.get(j);
             client_set = getClientsForGroups(groupItem,filter_type);
+            client_set  = setPayedBeforeClients(client_set);
             groupItem.clients =client_set;
             groupItem.total_def = getTotalExpectedPaymentForGroup(groupItem.id);
             groups.set(j,groupItem);
@@ -130,6 +131,30 @@ public class DBOperations  extends SQLiteOpenHelper {
             total = cursor.getDouble(0);
         }
         return total;
+    }
+
+    public ArrayList<ClientItem>setPayedBeforeClients(ArrayList<ClientItem> clients){
+        ClientItem clientItem;
+        for(int i=0; i<clients.size();i++){
+            clientItem = clients.get(i);
+            if(isPayedBefore(clientItem.loanid)){
+                clientItem.isPayedBefore = true;
+            }
+            clients.set(i,clientItem);
+        }
+        return clients;
+    }
+
+    public boolean isPayedBefore(String loan_id){
+        Boolean isPayedBefore = false;
+        String  countQuery = "SELECT "
+                + TableLoanTransactions.DEPOSIT_LOAN_ID +" "
+                + " FROM " + TableLoanTransactions.TABLE_NAME + " WHERE " + TableLoanTransactions.DEPOSIT_LOAN_ID + " =? AND " + TableLoanTransactions.DEPOSIT_AMOUNT + " >? ";
+        Cursor cursor = db.rawQuery(countQuery,new String[]{loan_id, "0"});
+        if(cursor.getCount()> 0 ){
+            isPayedBefore = true;
+        }
+        return isPayedBefore;
     }
 
     public ArrayList<ClientItem> getClientsForGroups(GroupItem group,String filter_type){
